@@ -9,6 +9,7 @@
 #include "cinder/app/RendererGl.h"
 #include "cinder/gl/gl.h"
 #include "world.h"
+#include "input_controller.h"
 
 namespace final_project{
 
@@ -21,10 +22,12 @@ class CinderApp : public ci::app::App {
   void update() override;
   void draw() override;
 
+  void keyUp(ci::app::KeyEvent event) override;
   void keyDown(ci::app::KeyEvent event) override;
 
  private:
   World world_;
+  InputController controller_;
 };
 
 }

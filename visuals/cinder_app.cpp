@@ -8,20 +8,22 @@ namespace final_project {
 
 namespace graphics {
 
-CinderApp::CinderApp() {
-
-}
+CinderApp::CinderApp() : world_(), controller_() {}
 
 void CinderApp::update() {
-
+  world_.Update(controller_);
 }
 
 void CinderApp::draw() {
+  world_.Draw();
+}
 
+void CinderApp::keyUp(ci::app::KeyEvent event) {
+  controller_.KeyRelease(event);
 }
 
 void CinderApp::keyDown(ci::app::KeyEvent event) {
-
+  controller_.KeyPress(event);
 }
 
 }

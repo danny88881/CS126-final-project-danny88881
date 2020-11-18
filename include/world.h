@@ -5,10 +5,27 @@
 #ifndef FINAL_PROJECT_INCLUDE_WORLD_H_
 #define FINAL_PROJECT_INCLUDE_WORLD_H_
 
+#include "cinder/gl/gl.h"
+#include <vector>
+#include "actor.h"
+#include "input_controller.h"
+
 namespace final_project {
 
-class World {
+using glm::vec2;
+using std::vector;
 
+class World {
+ public:
+  World();
+
+  void Update(const InputController &controller);
+  void Draw();
+
+ private:
+  vec2 camera_position_;
+  vector<Actor*> actors_;
+  float time_scale_;
 };
 
 }
