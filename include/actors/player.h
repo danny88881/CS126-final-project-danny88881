@@ -15,6 +15,7 @@ class World;
 class Player : public Actor {
  public:
   Player();
+  Player(vec2 position);
 
   virtual void Update(float time_scale, const vector<Actor*> &actors,
                       const InputController &controller) override;

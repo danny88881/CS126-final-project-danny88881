@@ -8,7 +8,9 @@ namespace final_project {
 
 namespace graphics {
 
-CinderApp::CinderApp() : world_(), controller_() {}
+CinderApp::CinderApp() : world_(), controller_() {
+  ci::app::setWindowSize(World::kWindowSize);
+}
 
 void CinderApp::update() {
   world_.Update(controller_);

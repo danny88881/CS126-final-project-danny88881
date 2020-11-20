@@ -10,8 +10,12 @@ namespace final_project {
 
 using glm::vec2;
 
-Player::Player() {
+Player::Player() : Actor() {
 
+}
+
+Player::Player(vec2 position) : Actor() {
+  position_ = position;
 }
 
 void Player::Draw() const {

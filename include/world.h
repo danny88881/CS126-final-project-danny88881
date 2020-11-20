@@ -22,8 +22,8 @@ class World {
   void Update(const InputController &controller);
   void Draw();
 
+  static constexpr vec2 kWindowSize = vec2(800, 800);
  private:
-  vec2 camera_position_;
   vector<Actor*> actors_;
   float time_scale_;
 };

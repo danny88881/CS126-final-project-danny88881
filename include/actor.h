@@ -16,7 +16,7 @@ using std::vector;
 
 class World;
 
-// Cinder's RectT doesn't seem to be working
+// Top left to bottom right
 struct Rect {
   int x1_;
   int y1_;
@@ -29,6 +29,8 @@ struct Rect {
 class Actor {
  public:
   Actor();
+  Actor(vec2 position, vec2 velocity, Rect collision, Rect hit_box,
+        double max_health, double health, float speed);
 
   /**
    * Updates the actor based on the passed timescale and a controller
