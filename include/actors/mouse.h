@@ -22,7 +22,6 @@ class Mouse : public Actor {
   virtual void Draw() const override;
  private:
   const std::string kSpritePath = "sprites/ui/Mouse.png";
-  ci::gl::TextureRef sprite_;
   ci::gl::BatchRef rect_;
   ci::gl::GlslProgRef material_;
 };

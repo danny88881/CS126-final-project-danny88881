@@ -44,8 +44,6 @@ World::World() : time_scale_(1), texture_map_() {
 }
 
 void World::Setup() {
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   camera_.lookAt(glm::vec3( 0, 1, 0 ), glm::vec3( 0 ) );
   for (Actor* actor : actors_) {
     actor->Setup(*this);
@@ -68,24 +66,27 @@ void World::Update(const InputController &controller) {
   }
 }
 
-size_t World::GetTextureIndex(const std::string &sprite_path) const {
+int World::GetTextureIndex(const std::string &sprite_path) const {
   auto iter = texture_map_.find(sprite_path);
   if (iter != texture_map_.end()) {
-    return iter->second;
+    return iter->second.second;
   }
   return -1;
 }
 
-size_t World::LoadTexture(const std::string &sprite_path) {
+int World::LoadTexture(const std::string &sprite_path) {
   int existing_index = GetTextureIndex(sprite_path);
   if (existing_index != -1) {
-    return existing_index;
+    return texture_map_[sprite_path].second;
   }
   auto img = cinder::loadImage(ci::app::loadAsset(sprite_path));
   auto sprite = ci::gl::Texture2d::create(img);
   int index = texture_map_.size();
-  texture_map_.emplace(sprite_path, index);
+  texture_map_.emplace(sprite_path,
+                       std::pair<ci::gl::TextureRef, int>(sprite, index));
   sprite->bind(index);
+  sprite->setMagFilter(GL_NEAREST);
+  sprite->setMinFilter(GL_NEAREST);
   return index;
 }
 

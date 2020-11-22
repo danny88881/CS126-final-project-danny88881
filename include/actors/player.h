@@ -23,8 +23,8 @@ class Player : public Actor {
                       const InputController &controller) override;
   virtual void Draw() const override;
  private:
-  const std::string kSpriteSheetPath = "sprites/player/CharacterSpriteSheet.png";
-  ci::gl::TextureRef sprite_sheet_;
+  const std::string kSpriteSheetPath
+      = "sprites/player/CharacterSpriteSheet.png";
   ci::gl::BatchRef rect_;
   ci::gl::GlslProgRef material_;
 };

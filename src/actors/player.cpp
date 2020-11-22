@@ -23,25 +23,25 @@ void Player::Setup(World &world) {
   material_ = ci::gl::GlslProg::create(
       ci::gl::GlslProg::Format()
           .vertex(CI_GLSL(
-              150,
-              uniform mat4 ciModelViewProjection;
-              in vec4 ciPosition;
-              in vec2 ciTexCoord0;
-              out vec2 TexCoord0;
-              void main(void) {
-                gl_Position = ciModelViewProjection * ciPosition;
-                TexCoord0 = ciTexCoord0;
-              }))
+                      150,
+                      uniform mat4 ciModelViewProjection;
+                          in vec4 ciPosition;
+                          in vec2 ciTexCoord0;
+                          out vec2 TexCoord0;
+                          void main(void) {
+                            gl_Position = ciModelViewProjection * ciPosition;
+                            TexCoord0 = ciTexCoord0;
+                          }))
           .fragment(CI_GLSL(
-              150,
-              uniform sampler2D uTex0;
-              uniform vec4 uColor;
-              uniform int frame;
-              in vec2 TexCoord0;
-              out vec4 oColor;
-              void main(void) {
-                oColor = texture( uTex0, TexCoord0 ) * uColor;
-              })));
+                        150,
+                        uniform sampler2D uTex0;
+                            uniform vec4 uColor;
+                            uniform int frame;
+                            in vec2 TexCoord0;
+                            out vec4 oColor;
+                            void main(void) {
+                              oColor = texture( uTex0, TexCoord0 ) * uColor;
+                            })));
 
   rect_ = ci::gl::Batch::create(ci::geom::Plane(), material_);
 

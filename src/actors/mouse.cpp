@@ -49,7 +49,14 @@ void Mouse::Update(float time_scale, const vector<Actor *> &actors,
 }
 
 void Mouse::Draw() const {
-
+  ci::gl::ScopedModelMatrix scpMtx;
+  ci::gl::translate(2*(position_.x - ci::app::getWindowSize().x / 2)
+                        /ci::app::getWindowSize().x,
+                    0.9f,
+                    2*(position_.y - ci::app::getWindowSize().y / 2)
+                        /ci::app::getWindowSize().y);
+  ci::gl::scale(0.1f,1,-0.1f);
+  rect_->draw();
 }
 
 }

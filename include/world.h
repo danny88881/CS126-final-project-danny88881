@@ -24,16 +24,16 @@ class World {
   void Update(const InputController &controller);
   void Draw();
 
-  size_t GetTextureIndex(const std::string &sprite_path) const;
+  int GetTextureIndex(const std::string &sprite_path) const;
 
-  size_t LoadTexture(const std::string &sprite_path);
+  int LoadTexture(const std::string &sprite_path);
 
   static constexpr vec2 kWindowSize = vec2(512, 512);
  private:
   vector<Actor*> actors_;
   float time_scale_;
   ci::CameraOrtho camera_;
-  map<std::string, int> texture_map_;
+  map<std::string, std::pair<ci::gl::TextureRef, int>> texture_map_;
 };
 
 }
