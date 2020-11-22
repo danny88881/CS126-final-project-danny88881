@@ -18,25 +18,25 @@ World::World() : time_scale_(1), texture_map_() {
                                          -(int)kWindowSize.y/2 - 50,
                                          50, (int)kWindowSize.y/2 + 50),
                            Rect(0,0,0,0),
-                           -1, -1, 0);
+                           -1, -1, 0, {true, false, false, false});
   auto border2 = new Actor(vec2((int)kWindowSize.x + 50,
                                 (int)kWindowSize.y / 2),
                            vec2(0), Rect(-50,
                                          -(int)kWindowSize.y/2 - 50,
                                          50, (int)kWindowSize.y/2 + 50),
                            Rect(0,0,0,0),
-                           -1, -1, 0);
+                           -1, -1, 0, {true, false, false, false});
   auto border3 = new Actor(vec2((int)kWindowSize.x / 2, -50),
                            vec2(0), Rect(-(int)kWindowSize.x - 50,
                                          -50,(int)kWindowSize.x + 50,50),
                            Rect(0,0,0,0),
-                           -1, -1, 0);
+                           -1, -1, 0, {true, false, false, false});
   auto border4 = new Actor(vec2((int)kWindowSize.x / 2,
                                 (int)kWindowSize.y + 50),
                            vec2(0), Rect(-(int)kWindowSize.x - 50,
                                          -50,(int)kWindowSize.x + 50,50),
                            Rect(0,0,0,0),
-                           -1, -1, 0);
+                           -1, -1, 0, {true, false, false, false});
   actors_.emplace_back(border1);
   actors_.emplace_back(border2);
   actors_.emplace_back(border3);

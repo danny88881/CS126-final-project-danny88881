@@ -27,6 +27,9 @@ class Player : public Actor {
       = "sprites/player/CharacterSpriteSheet.png";
   ci::gl::BatchRef rect_;
   ci::gl::GlslProgRef material_;
+  const int kFrameSkip = 12;
+  const int kMaxFrames = 4;
+  int frame_index_;
 };
 
 }

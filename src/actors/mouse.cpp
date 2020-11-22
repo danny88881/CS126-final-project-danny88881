@@ -7,7 +7,8 @@
 
 namespace final_project {
 
-Mouse::Mouse() : Actor() {
+Mouse::Mouse() : Actor(vec2(0,0), vec2(0,0), Rect(0,0,0,0),
+            Rect(0,0,0,0), -1, -1, 0, {false, false, false, false}) {
 }
 
 void Mouse::Setup(World &world) {

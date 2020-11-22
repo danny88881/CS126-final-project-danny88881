@@ -30,7 +30,8 @@ class Actor {
  public:
   Actor();
   Actor(vec2 position, vec2 velocity, Rect collision, Rect hit_box,
-        double max_health, double health, float speed);
+        double max_health, double health, float speed,
+        vector<bool> collision_layers);
 
   /**
    * Sets up the current actor
@@ -67,6 +68,7 @@ class Actor {
   double max_health_;
   double health_;
   float speed_;
+  vector<bool> collision_layers_;
 };
 
 }
