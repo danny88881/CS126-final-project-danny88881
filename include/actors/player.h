@@ -25,11 +25,16 @@ class Player : public Actor {
  private:
   const std::string kSpriteSheetPath
       = "sprites/player/CharacterSpriteSheet.png";
+  const std::string kScytheSpritePath
+      = "sprites/weapon/Scythe.png";
   ci::gl::BatchRef rect_;
+  ci::gl::BatchRef scythe_rect_;
   ci::gl::GlslProgRef material_;
+  ci::gl::GlslProgRef scythe_material_;
   const int kFrameSkip = 12;
   const int kMaxFrames = 4;
   int frame_index_;
+  int x_scale_;
 };
 
 }
