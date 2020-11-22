@@ -17,11 +17,16 @@ class Player : public Actor {
   Player();
   Player(vec2 position);
 
+  virtual void Setup(World &world) override;
+
   virtual void Update(float time_scale, const vector<Actor*> &actors,
                       const InputController &controller) override;
   virtual void Draw() const override;
  private:
-
+  const std::string kSpriteSheetPath = "sprites/player/CharacterSpriteSheet.png";
+  ci::gl::TextureRef sprite_sheet_;
+  ci::gl::BatchRef rect_;
+  ci::gl::GlslProgRef material_;
 };
 
 }

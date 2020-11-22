@@ -14,18 +14,26 @@ namespace final_project {
 
 using glm::vec2;
 using std::vector;
+using std::map;
 
 class World {
  public:
   World();
 
+  void Setup();
   void Update(const InputController &controller);
   void Draw();
 
-  static constexpr vec2 kWindowSize = vec2(800, 800);
+  size_t GetTextureIndex(const std::string &sprite_path) const;
+
+  size_t LoadTexture(const std::string &sprite_path);
+
+  static constexpr vec2 kWindowSize = vec2(512, 512);
  private:
   vector<Actor*> actors_;
   float time_scale_;
+  ci::CameraOrtho camera_;
+  map<std::string, int> texture_map_;
 };
 
 }

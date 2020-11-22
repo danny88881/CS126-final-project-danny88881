@@ -3,12 +3,13 @@
 //
 
 #include "cinder/Rect.h"
+#include "world.h"
 #include "actor.h"
 
 namespace final_project {
 
 Actor::Actor() : position_(0,0), velocity_(0,0), max_health_(3),
-      health_(max_health_), speed_(10), collision_(-10, -10, 10, 10),
+      health_(max_health_), speed_(5), collision_(-10, -10, 10, 10),
       hit_box_(-10, -10, 10, 10) {
 }
 
@@ -17,6 +18,9 @@ Actor::Actor(vec2 position, vec2 velocity, Rect collision, Rect hit_box,
       position_(position), velocity_(velocity), collision_(collision),
       hit_box_(hit_box), max_health_(max_health), health_(health), speed_(speed)
 {}
+
+void Actor::Setup(World &world) {
+}
 
 void Actor::Update(float time_scale, const vector<Actor*> &actors,
             const InputController &controller) {

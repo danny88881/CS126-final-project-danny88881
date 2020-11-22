@@ -10,6 +10,11 @@ namespace graphics {
 
 CinderApp::CinderApp() : world_(), controller_() {
   ci::app::setWindowSize(World::kWindowSize);
+  //hideCursor();
+}
+
+void CinderApp::setup() {
+  world_.Setup();
 }
 
 void CinderApp::update() {

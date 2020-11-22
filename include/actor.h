@@ -33,6 +33,12 @@ class Actor {
         double max_health, double health, float speed);
 
   /**
+   * Sets up the current actor
+   * @param world the current world of the actor
+   */
+  virtual void Setup(World &world);
+
+  /**
    * Updates the actor based on the passed timescale and a controller
    * @param time_scale the timescale of the world
    * @param actors the actors in the same world
