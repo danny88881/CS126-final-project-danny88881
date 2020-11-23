@@ -34,6 +34,10 @@ class World {
   float time_scale_;
   ci::CameraOrtho camera_;
   map<std::string, std::pair<ci::gl::TextureRef, int>> texture_map_;
+  const std::string kFloorSpritePath
+      = "sprites/environment/Floor.png";
+  ci::gl::BatchRef floor_rect_;
+  ci::gl::GlslProgRef floor_material_;
 };
 
 }

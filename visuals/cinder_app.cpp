@@ -33,6 +33,18 @@ void CinderApp::keyDown(ci::app::KeyEvent event) {
   controller_.KeyPress(event);
 }
 
+void CinderApp::mouseUp(ci::app::MouseEvent event) {
+  if (event.isLeft()) {
+    controller_.SetMouseState(false);
+  }
+}
+
+void CinderApp::mouseDown(ci::app::MouseEvent event) {
+  if (event.isLeft()) {
+    controller_.SetMouseState(true);
+  }
+}
+
 }
 
 }

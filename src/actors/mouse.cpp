@@ -56,7 +56,7 @@ void Mouse::Draw() const {
                     0.9f,
                     2*(position_.y - ci::app::getWindowSize().y / 2)
                         /ci::app::getWindowSize().y);
-  ci::gl::scale(0.1f,1,-0.1f);
+  ci::gl::scale(0.125f,1,-0.125f);
   rect_->draw();
 }
 

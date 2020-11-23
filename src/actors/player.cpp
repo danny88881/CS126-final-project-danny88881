@@ -12,7 +12,9 @@ using glm::vec2;
 
 Player::Player() : Actor(vec2(0,0), vec2(0,0), Rect(-20,-20,20,20),
                          Rect(-20,-20,20,20), 3, 3, 4,
-            {true, false, false, false}), frame_index_(0), x_scale_(1)  {
+            {true, false, false, false}), frame_index_(0), x_scale_(1),
+      attack_(false), attack_frame_length_(12), attack_frame_(12),
+      can_attack_(true), attack_frame_delay_(12) {
 }
 
 Player::Player(vec2 position) : Player() {
@@ -104,10 +106,12 @@ void Player::Draw() const {
     material_->uniform("frame", 0);
   }
 
-  ci::gl::scale((float)x_scale_ * 0.1f,1,-0.1f);
+  ci::gl::scale((float)x_scale_ * 0.125f,1,-0.125f);
   rect_->draw();
-  ci::gl::scale((float)x_scale_ * 2.0f,1,2.0f);
-  scythe_rect_->draw();
+  if (attack_frame_ >= attack_frame_length_) {
+    ci::gl::scale((float)x_scale_ * 2.0f, 1, 2.0f);
+    scythe_rect_->draw();
+  }
 }
 
 void Player::Update(float time_scale, const vector<Actor *> &actors,
@@ -123,6 +127,19 @@ void Player::Update(float time_scale, const vector<Actor *> &actors,
   vec2 direction(hdir, vdir);
   direction = glm::normalize(direction);
   velocity_ = direction * vec2(speed_);
+
+  if (can_attack_ && controller.GetMouseState()) {
+    attack_ = true;
+    can_attack_ = false;
+    attack_frame_ = 0;
+  }
+  if (attack_) {
+    ++attack_frame_;
+  }
+  if (attack_frame_ > attack_frame_length_ + attack_frame_delay_) {
+    attack_ = false;
+    can_attack_ = true;
+  }
 
   if (velocity_.x > 0) {
     x_scale_ = -1;

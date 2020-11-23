@@ -9,7 +9,7 @@
 namespace final_project {
 
 World::World() : time_scale_(1), texture_map_() {
-  auto player = new Player(kWindowSize / vec2(2));
+  auto player = new Player(kWindowSize / vec2(2) + vec2(0, 100));
   actors_.emplace_back(player);
   auto mouse = new Mouse();
   actors_.emplace_back(mouse);
@@ -48,12 +48,48 @@ void World::Setup() {
   for (Actor* actor : actors_) {
     actor->Setup(*this);
   }
+
+  int index = LoadTexture(kFloorSpritePath);
+  floor_material_ = ci::gl::GlslProg::create(
+      ci::gl::GlslProg::Format()
+          .vertex(CI_GLSL(
+                      150,
+                      uniform mat4 ciModelViewProjection;
+                          in vec4 ciPosition;
+                          in vec2 ciTexCoord0;
+                          out vec2 TexCoord0;
+                          void main(void) {
+                            gl_Position = ciModelViewProjection * ciPosition;
+                            TexCoord0 = ciTexCoord0;
+                          }))
+          .fragment(CI_GLSL(
+                        150,
+                        uniform sampler2D uTex0;
+                            uniform vec4 uColor;
+                            in vec2 TexCoord0;
+                            out vec4 oColor;
+                            void main(void) {
+                              vec4 color = texture2D(uTex0, TexCoord0)
+                                  * uColor;
+                              oColor = color;
+                            }))
+  );
+  floor_rect_ = ci::gl::Batch::create(ci::geom::Plane(), floor_material_);
+  ci::ColorAf color( 1,1,1,1 );
+  floor_material_->uniform("uTex0", index);
+  floor_material_->uniform( "uColor", color );
 }
 
 void World::Draw() {
   ci::gl::setMatrices(camera_);
   ci::Color8u background_color(100, 100, 100);
   ci::gl::clear(background_color);
+
+  ci::gl::pushModelMatrix();
+  ci::gl::translate(0, -10.0f, 0);
+  ci::gl::scale(1, 1, -1);
+  floor_rect_->draw();
+  ci::gl::popModelMatrix();
 
   for (const Actor* actor : actors_) {
     actor->Draw();

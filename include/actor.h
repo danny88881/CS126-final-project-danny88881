@@ -63,6 +63,7 @@ class Actor {
  protected:
   vec2 position_;
   vec2 velocity_;
+  vec2 knockback_velocity_;
   Rect collision_;
   Rect hit_box_;
   double max_health_;

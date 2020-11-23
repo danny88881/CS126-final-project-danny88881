@@ -6,7 +6,8 @@
 
 namespace final_project {
 
-InputController::InputController() : key_pressed_((int)Key::kLength,false){}
+InputController::InputController() : key_pressed_((int)Key::kLength,false),
+      mouse_down_(false) {}
 
 void InputController::KeyPress(KeyEvent event) {
   // not using switch case since key_to_event_ is dynamic
@@ -30,6 +31,14 @@ void InputController::KeyRelease(KeyEvent event) {
 
 bool InputController::IsKeyPressed(Key key) const {
   return key_pressed_[key];
+}
+
+void InputController::SetMouseState(bool mouse_state) {
+  mouse_down_ = mouse_state;
+}
+
+bool InputController::GetMouseState() const {
+  return mouse_down_;
 }
 
 }

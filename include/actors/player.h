@@ -31,10 +31,16 @@ class Player : public Actor {
   ci::gl::BatchRef scythe_rect_;
   ci::gl::GlslProgRef material_;
   ci::gl::GlslProgRef scythe_material_;
-  const int kFrameSkip = 12;
+  const int kFrameSkip = 10;
   const int kMaxFrames = 4;
   int frame_index_;
   int x_scale_;
+
+  bool attack_;
+  bool can_attack_;
+  int attack_frame_;
+  int attack_frame_length_;
+  int attack_frame_delay_;
 };
 
 }
