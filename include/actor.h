@@ -26,12 +26,18 @@ struct Rect {
   Rect(int x1, int y1, int x2, int y2) : x1_(x1), y1_(y1), x2_(x2), y2_(y2) {};
 };
 
+enum ActorType {
+  kPlayer,
+  kEnemy,
+  kNeutral
+};
+
 class Actor {
  public:
   Actor();
   Actor(vec2 position, vec2 velocity, Rect collision, Rect hit_box,
         double max_health, double health, float speed,
-        vector<bool> collision_layers);
+        vector<bool> collision_layers, ActorType type);
 
   /**
    * Sets up the current actor
@@ -60,6 +66,15 @@ class Actor {
    */
   virtual bool IsColliding(const Actor &other_actor);
 
+  /**
+   * Checks whether this actor's hitbox is colliding with the collision of
+   * another actor
+   * @param other_actor the other actor to check collision with
+   * @return a boolean representing whether this hitbox is colliding with the
+   * other actor
+   */
+  virtual bool IsCollidingWithHitBox(const Actor &other_actor);
+
   vec2 GetPosition() const;
   vec2 GetVelocity() const;
   double GetHealth() const;
@@ -75,6 +90,7 @@ class Actor {
   double health_;
   float speed_;
   vector<bool> collision_layers_;
+  ActorType type_;
 };
 
 }

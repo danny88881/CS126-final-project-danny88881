@@ -7,18 +7,11 @@
 
 #include "cinder/app/App.h"
 #include "actor.h"
+#include "attack.h"
 
 namespace final_project {
 
 class World;
-
-enum AttackDirection {
-  kUpAttack,
-  kDownAttack,
-  kLeftAttack,
-  kRightAttack,
-  kNone
-};
 
 class Player : public Actor {
  public:
@@ -49,6 +42,8 @@ class Player : public Actor {
   int attack_frame_;
   int attack_frame_length_;
   int attack_frame_delay_;
+
+  vector<Attack> attacks_;
 
   void SetAttack(AttackDirection attack_direction);
 };

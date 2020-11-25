@@ -12,10 +12,12 @@ using glm::vec2;
 
 Player::Player() : Actor(vec2(0,0), vec2(0,0), Rect(-20,-20,20,20),
                          Rect(-20,-20,20,20), 3, 3, 2,
-            {true, false, false, false}), frame_index_(0), x_scale_(1),
+            {true, false, false, false}, ActorType::kPlayer),
+      frame_index_(0), x_scale_(1),
       attack_direction_(AttackDirection::kNone),
       attack_frame_length_(12), attack_frame_(12),
-      can_attack_(true), attack_frame_delay_(12) {
+      can_attack_(true), attack_frame_delay_(12),
+      attacks_() {;
 }
 
 Player::Player(vec2 position) : Player() {

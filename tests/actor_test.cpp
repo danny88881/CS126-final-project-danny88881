@@ -134,3 +134,34 @@ TEST_CASE("Actor IsColliding") {
     REQUIRE(actor2.IsColliding(actor));
   }
 }
+
+TEST_CASE("Actor IsCollidingWithHitbox") {
+  Actor actor(vec2(0), vec2(0), Rect(-50, -50, 50, 50), Rect(-60, -60, 60, 60),
+              -1, -1, 0, {true, false, false, false});
+  SECTION("No Hitbox Collision", "[no collision]") {
+    Actor actor2(vec2(111), vec2(0), Rect(-50, -50, 50, 50), Rect(0, 0, 0, 0),
+                 -1, -1, 0, {true, false, false, false});
+    REQUIRE_FALSE(actor.IsCollidingWithHitBox(actor2));
+  }
+
+  SECTION("Hitbox Collision and collision", "[hitbox collision][collision]") {
+    Actor actor2(vec2(10), vec2(0), Rect(-50, -50, 50, 50), Rect(0, 0, 0, 0),
+                 -1, -1, 0, {true, false, false, false});
+    REQUIRE(actor.IsCollidingWithHitBox(actor2));
+    REQUIRE(actor.IsColliding(actor2));
+  }
+
+  SECTION("Hitbox Collision and no collision", "[hitbox collision][no collision]") {
+    Actor actor2(vec2(101), vec2(0), Rect(-50, -50, 50, 50), Rect(0, 0, 0, 0),
+                 -1, -1, 0, {true, false, false, false});
+    REQUIRE(actor.IsCollidingWithHitBox(actor2));
+    REQUIRE_FALSE(actor.IsColliding(actor2));
+  }
+
+  SECTION("Collision not same layer", "[collision][not same layer]") {
+    Actor actor2(vec2(10), vec2(0), Rect(-50, -50, 50, 50), Rect(0, 0, 0, 0),
+                 -1, -1, 0, {false, true, false, false});
+    REQUIRE(actor.IsCollidingWithHitBox(actor2));
+  }
+}
+
