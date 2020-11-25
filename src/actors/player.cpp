@@ -106,7 +106,7 @@ void Player::Draw() const {
     material_->uniform("frame", 0);
   }
 
-  ci::gl::scale((float)x_scale_ * 0.125f,1,-0.125f);
+  ci::gl::scale((float)x_scale_ * 0.0625f,1,-0.0625f);
   rect_->draw();
   if (attack_frame_ >= attack_frame_length_) {
     ci::gl::scale((float)x_scale_ * 2.0f, 1, 2.0f);
@@ -114,7 +114,7 @@ void Player::Draw() const {
   }
 }
 
-void Player::Update(float time_scale, const vector<Actor *> &actors,
+void Player::Update(float time_scale, const World &world,
                     const InputController &controller) {
   ++frame_index_;
   if (frame_index_ >= kMaxFrames * kFrameSkip) {
@@ -128,7 +128,7 @@ void Player::Update(float time_scale, const vector<Actor *> &actors,
   direction = glm::normalize(direction);
   velocity_ = direction * vec2(speed_);
 
-  if (can_attack_ && controller.GetMouseState()) {
+  /*if (can_attack_ && controller.GetMouseState()) {
     attack_ = true;
     can_attack_ = false;
     attack_frame_ = 0;
@@ -139,7 +139,7 @@ void Player::Update(float time_scale, const vector<Actor *> &actors,
   if (attack_frame_ > attack_frame_length_ + attack_frame_delay_) {
     attack_ = false;
     can_attack_ = true;
-  }
+  }*/
 
   if (velocity_.x > 0) {
     x_scale_ = -1;
@@ -151,7 +151,7 @@ void Player::Update(float time_scale, const vector<Actor *> &actors,
   position_ += velocity_ * time_scale;
 
   bool collision_occurred = false;
-  for (const Actor *actor : actors) {
+  for (const Actor *actor : world.GetActors()) {
     if (actor != this && IsColliding(*actor)) {
       collision_occurred = true;
       break;

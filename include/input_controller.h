@@ -19,8 +19,12 @@ enum Key {
   kDown,
   kLeft,
   kRight,
+  kAttackUp,
+  kAttackDown,
+  kAttackLeft,
+  kAttackRight,
 
-  kLength = 4 // solution proposed on stack overflow - END MARKER
+  kLength = 8 // solution proposed on stack overflow - END MARKER
 };
 
 class InputController {
@@ -51,6 +55,10 @@ class InputController {
  private:
   vector<bool> key_pressed_;
   vector<int> key_to_event_ {
+      KeyEvent::KEY_w,
+      KeyEvent::KEY_s,
+      KeyEvent::KEY_a,
+      KeyEvent::KEY_d,
       KeyEvent::KEY_w,
       KeyEvent::KEY_s,
       KeyEvent::KEY_a,

@@ -19,7 +19,7 @@ class Player : public Actor {
 
   virtual void Setup(World &world) override;
 
-  virtual void Update(float time_scale, const vector<Actor*> &actors,
+  virtual void Update(float time_scale, const World &world,
                       const InputController &controller) override;
   virtual void Draw() const override;
  private:

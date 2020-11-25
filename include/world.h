@@ -18,6 +18,9 @@ using std::map;
 
 class World {
  public:
+  /**
+   * Creates a world with a player and boundaries
+   */
   World();
 
   void Setup();
@@ -27,6 +30,10 @@ class World {
   int GetTextureIndex(const std::string &sprite_path) const;
 
   int LoadTexture(const std::string &sprite_path);
+
+  void AddActor(Actor* actor);
+  void RemoveActor(Actor* actor);
+  vector<Actor*> GetActors() const;
 
   static constexpr vec2 kWindowSize = vec2(512, 512);
  private:

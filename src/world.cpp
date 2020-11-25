@@ -10,9 +10,7 @@ namespace final_project {
 
 World::World() : time_scale_(1), texture_map_() {
   auto player = new Player(kWindowSize / vec2(2) + vec2(0, 100));
-  actors_.emplace_back(player);
-  auto mouse = new Mouse();
-  actors_.emplace_back(mouse);
+  AddActor(player);
   auto border1 = new Actor(vec2(-50, (int)kWindowSize.y / 2),
                            vec2(0), Rect(-50,
                                          -(int)kWindowSize.y/2 - 50,
@@ -37,10 +35,10 @@ World::World() : time_scale_(1), texture_map_() {
                                          -50,(int)kWindowSize.x + 50,50),
                            Rect(0,0,0,0),
                            -1, -1, 0, {true, false, false, false});
-  actors_.emplace_back(border1);
-  actors_.emplace_back(border2);
-  actors_.emplace_back(border3);
-  actors_.emplace_back(border4);
+  AddActor(border1);
+  AddActor(border2);
+  AddActor(border3);
+  AddActor(border4);
 }
 
 void World::Setup() {
@@ -98,7 +96,7 @@ void World::Draw() {
 
 void World::Update(const InputController &controller) {
   for (Actor* actor : actors_) {
-    actor->Update(time_scale_, actors_, controller);
+    actor->Update(time_scale_, *this, controller);
   }
 }
 
@@ -124,6 +122,21 @@ int World::LoadTexture(const std::string &sprite_path) {
   sprite->setMagFilter(GL_NEAREST);
   sprite->setMinFilter(GL_NEAREST);
   return index;
+}
+
+void World::AddActor(Actor *actor) {
+  actors_.push_back(actor);
+}
+
+void World::RemoveActor(Actor *actor) {
+  auto iter = std::find(actors_.begin(), actors_.end(), actor);
+  if (iter != actors_.end()) {
+    actors_.erase(iter);
+  }
+}
+
+vector<Actor*> World::GetActors() const {
+  return vector<Actor*>(actors_);
 }
 
 }

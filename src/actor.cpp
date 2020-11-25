@@ -24,7 +24,7 @@ Actor::Actor(vec2 position, vec2 velocity, Rect collision, Rect hit_box,
 void Actor::Setup(World &world) {
 }
 
-void Actor::Update(float time_scale, const vector<Actor*> &actors,
+void Actor::Update(float time_scale, const World &world,
             const InputController &controller) {
   position_ += velocity_ * vec2(time_scale);
 }
@@ -54,6 +54,22 @@ bool Actor::IsColliding(const Actor &other_actor) {
     return false;
   else
     return true;
+}
+
+vec2 Actor::GetPosition() const {
+  return vec2(position_);
+}
+
+vec2 Actor::GetVelocity() const {
+  return vec2(velocity_);
+}
+
+double Actor::GetHealth() const {
+  return health_;
+}
+
+double Actor::GetMaxHealth() const {
+  return max_health_;
 }
 
 }

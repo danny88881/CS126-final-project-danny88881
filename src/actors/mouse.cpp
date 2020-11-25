@@ -44,7 +44,7 @@ void Mouse::Setup(World &world) {
   material_->uniform( "uColor", color );
 }
 
-void Mouse::Update(float time_scale, const vector<Actor *> &actors,
+void Mouse::Update(float time_scale, const World &world,
                     const InputController &controller) {
   position_ = cinder::app::getWindow()->getMousePos();
 }
@@ -56,7 +56,7 @@ void Mouse::Draw() const {
                     0.9f,
                     2*(position_.y - ci::app::getWindowSize().y / 2)
                         /ci::app::getWindowSize().y);
-  ci::gl::scale(0.125f,1,-0.125f);
+  ci::gl::scale(0.0625f,1,-0.0625f);
   rect_->draw();
 }
 

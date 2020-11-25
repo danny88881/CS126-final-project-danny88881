@@ -55,7 +55,7 @@ list(APPEND CORE_SOURCE_FILES src/actor.cpp src/world.cpp src/input_controller.c
 list(APPEND SOURCE_FILES    ${CORE_SOURCE_FILES}
         visuals/cinder_app.cpp)
 
-#list(APPEND TEST_FILES tests/particle_test.cc tests/ideal_gas_simulation_test.cc)
+list(APPEND TEST_FILES tests/actor_test.cpp)
 
 ci_make_app(
         APP_NAME        final-project-run
@@ -64,14 +64,14 @@ ci_make_app(
         INCLUDES        include
 )
 
-#ci_make_app(
-#        APP_NAME        ideal-gas-test
-#        CINDER_PATH     ${CINDER_PATH}
-#        SOURCES         tests/test_main.cc ${SOURCE_FILES} ${TEST_FILES}
-#        INCLUDES        include
-#        LIBRARIES       catch2
-#)
+ci_make_app(
+        APP_NAME        final-project-test
+        CINDER_PATH     ${CINDER_PATH}
+        SOURCES         tests/test_main.cpp ${SOURCE_FILES} ${TEST_FILES}
+        INCLUDES        include
+        LIBRARIES       catch2
+)
 
-#if(MSVC)
-#    set_property(TARGET ideal-gas-test APPEND_STRING PROPERTY LINK_FLAGS " /SUBSYSTEM:CONSOLE")
-#endif()
+if(MSVC)
+    set_property(TARGET final-project-test APPEND_STRING PROPERTY LINK_FLAGS " /SUBSYSTEM:CONSOLE")
+endif()

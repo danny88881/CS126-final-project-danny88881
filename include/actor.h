@@ -45,7 +45,7 @@ class Actor {
    * @param actors the actors in the same world
    * @param controller the player's controller
    */
-  virtual void Update(float time_scale, const vector<Actor*> &actors,
+  virtual void Update(float time_scale, const World &world,
                       const InputController &controller);
 
   /**
@@ -59,6 +59,11 @@ class Actor {
    * @return a boolean representing whether their collisions are intersecting
    */
   virtual bool IsColliding(const Actor &other_actor);
+
+  vec2 GetPosition() const;
+  vec2 GetVelocity() const;
+  double GetHealth() const;
+  double GetMaxHealth() const;
 
  protected:
   vec2 position_;
