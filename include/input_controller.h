@@ -59,10 +59,10 @@ class InputController {
       KeyEvent::KEY_s,
       KeyEvent::KEY_a,
       KeyEvent::KEY_d,
-      KeyEvent::KEY_w,
-      KeyEvent::KEY_s,
-      KeyEvent::KEY_a,
-      KeyEvent::KEY_d,
+      KeyEvent::KEY_UP,
+      KeyEvent::KEY_DOWN,
+      KeyEvent::KEY_LEFT,
+      KeyEvent::KEY_RIGHT,
   }; // not const so key remapping could be a feature
   bool mouse_down_;
 };

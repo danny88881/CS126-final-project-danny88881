@@ -12,6 +12,14 @@ namespace final_project {
 
 class World;
 
+enum AttackDirection {
+  kUpAttack,
+  kDownAttack,
+  kLeftAttack,
+  kRightAttack,
+  kNone
+};
+
 class Player : public Actor {
  public:
   Player();
@@ -36,11 +44,13 @@ class Player : public Actor {
   int frame_index_;
   int x_scale_;
 
-  bool attack_;
+  AttackDirection attack_direction_;
   bool can_attack_;
   int attack_frame_;
   int attack_frame_length_;
   int attack_frame_delay_;
+
+  void SetAttack(AttackDirection attack_direction);
 };
 
 }

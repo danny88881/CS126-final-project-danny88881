@@ -11,9 +11,10 @@ namespace final_project {
 using glm::vec2;
 
 Player::Player() : Actor(vec2(0,0), vec2(0,0), Rect(-20,-20,20,20),
-                         Rect(-20,-20,20,20), 3, 3, 4,
+                         Rect(-20,-20,20,20), 3, 3, 2,
             {true, false, false, false}), frame_index_(0), x_scale_(1),
-      attack_(false), attack_frame_length_(12), attack_frame_(12),
+      attack_direction_(AttackDirection::kNone),
+      attack_frame_length_(12), attack_frame_(12),
       can_attack_(true), attack_frame_delay_(12) {
 }
 
@@ -128,18 +129,24 @@ void Player::Update(float time_scale, const World &world,
   direction = glm::normalize(direction);
   velocity_ = direction * vec2(speed_);
 
-  /*if (can_attack_ && controller.GetMouseState()) {
-    attack_ = true;
-    can_attack_ = false;
-    attack_frame_ = 0;
+
+
+  if (controller.IsKeyPressed(Key::kAttackUp)) {
+    SetAttack(AttackDirection::kUpAttack);
+  } else if (controller.IsKeyPressed(Key::kAttackDown)) {
+    SetAttack(AttackDirection::kDownAttack);
+  } else if (controller.IsKeyPressed(Key::kAttackLeft)) {
+    SetAttack(AttackDirection::kLeftAttack);
+  } else if (controller.IsKeyPressed(Key::kAttackRight)) {
+    SetAttack(AttackDirection::kRightAttack);
   }
-  if (attack_) {
+  if (attack_direction_ != AttackDirection::kNone) {
     ++attack_frame_;
   }
   if (attack_frame_ > attack_frame_length_ + attack_frame_delay_) {
-    attack_ = false;
+    attack_direction_ = AttackDirection::kNone;
     can_attack_ = true;
-  }*/
+  }
 
   if (velocity_.x > 0) {
     x_scale_ = -1;
@@ -160,6 +167,14 @@ void Player::Update(float time_scale, const World &world,
 
   if (collision_occurred) {
     position_ = last_position;
+  }
+}
+
+void Player::SetAttack(AttackDirection attack_direction) {
+  if (can_attack_) {
+    attack_direction_ = attack_direction;
+    can_attack_ = false;
+    attack_frame_ = 0;
   }
 }
 
