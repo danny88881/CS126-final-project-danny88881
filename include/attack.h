@@ -34,6 +34,8 @@ class Attack : public Actor {
   float damage_;
   std::string sprite_sheet_path_
       = "sprites/weapon/32slash.png";
+  std::string sprite_icon_path_
+      = "sprites/ui/Sword.png";
   ci::gl::BatchRef rect_;
   ci::gl::GlslProgRef material_;
   int max_frames_ = 4;

@@ -8,6 +8,7 @@
 #include "cinder/gl/gl.h"
 #include <vector>
 #include "actor.h"
+#include "attack.h"
 #include "input_controller.h"
 
 namespace final_project {
@@ -46,6 +47,12 @@ class World {
       = "sprites/environment/Floor.png";
   ci::gl::BatchRef floor_rect_;
   ci::gl::GlslProgRef floor_material_;
+  const vector<Attack*> player_attacks_ = {
+      new Attack(),
+      new Attack(),
+      new Attack(),
+      new Attack()
+  };
 };
 
 }

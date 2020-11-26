@@ -25,6 +25,8 @@ class Player : public Actor {
   virtual void Update(float time_scale, World &world,
                       const InputController &controller) override;
   virtual void Draw() const override;
+
+  vector<Attack*> GetAttacks() const;
  private:
   const std::string kSpriteSheetPath
       = "sprites/player/CharacterSpriteSheet.png";

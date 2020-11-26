@@ -113,7 +113,7 @@ void Attack::Draw() const {
   material_->uniform("frame", cur_frame % (max_frames_));
 
   ci::gl::scale(0.125f,1,-0.125f);
-  ci::gl::rotate((float)rotation_);
+  ci::gl::rotate((float)rotation_, glm::vec3(0,1,0));
   rect_->draw();
   ci::gl::setMatricesWindow(cinder::app::getWindowSize());
   ci::gl::color(1,0,0,1);

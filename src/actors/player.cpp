@@ -190,24 +190,33 @@ void Player::AttackAtDirection(AttackDirection attack_direction, World &world) {
     can_attack_ = false;
     attack_frame_ = 0;
     vec2 dir = vec2(0,0);
+    double rotation = 0;
     switch (attack_direction) {
       case AttackDirection::kUpAttack:
         dir = vec2(0, -1);
+        rotation = 0;
         break;
       case AttackDirection::kDownAttack:
         dir = vec2(0, 1);
+        rotation = M_PI;
         break;
       case AttackDirection::kLeftAttack:
         dir = vec2(-1, 0);
+        rotation = -M_PI/2.0;
         break;
       case AttackDirection::kRightAttack:
         dir = vec2(1, 0);
+        rotation = M_PI/2.0;
         break;
     }
-    Attack* attack = new Attack(*attacks_[attack_direction], attack_direction,
+    Attack* attack = new Attack(*attacks_[attack_direction], rotation,
                                 position_ + dir * vec2((float)kAttackOffset));
     world.AddActor(attack);
   }
+}
+
+vector<Attack*> Player::GetAttacks() const {
+  return vector<Attack*>(attacks_);
 }
 
 }  // namespace final_project
