@@ -4,26 +4,35 @@
 
 #include "attack.h"
 #include "world.h"
+#include "cinder/app/App.h"
 
 namespace final_project {
 
 Attack::Attack() : Actor(vec2(0,0), vec2(0,0), Rect(0,0,0,0),
-                          Rect(-20,-20,20,20), -1, -1, 0,
+                          Rect(-32,-32,32,32), -1, -1, 0,
                           {false, false, false, false}, ActorType::kNeutral),
       damage_(1), sprite_sheet_path_("sprites/weapon/32slash.png"),
-      max_frames_(1), frame_life_(2), frame_index_(0), direction_(kNone) {
+      max_frames_(1), frame_life_(0.5f), frame_index_(0), rotation_(0),
+      hit_actors_() {
 }
 
-Attack::Attack(AttackDirection direction) : Attack() {
-  direction_ = direction;
-}
-
-Attack::Attack(float damage, std::string sprite_sheet_path, int max_frames,
-               int frame_life) : Actor() {
-  damage_ = damage;
-  sprite_sheet_path_ = sprite_sheet_path;
-  max_frames_ = max_frames;
-  frame_life_ = frame_life;
+Attack::Attack(const Attack &attack, double rotation, vec2 position) {
+  frame_index_ = 0;
+  position_ = position;
+  velocity_ = attack.velocity_;
+  collision_ = attack.collision_;
+  hit_box_ = attack.hit_box_;
+  max_health_ = attack.max_health_;
+  health_ = attack.health_;
+  speed_ = attack.speed_;
+  collision_layers_ = attack.collision_layers_;
+  type_ = attack.type_;
+  damage_ = attack.damage_;
+  sprite_sheet_path_ = attack.sprite_sheet_path_;
+  max_frames_ = attack.max_frames_;
+  frame_life_ = attack.frame_life_;
+  rotation_ = rotation;
+  hit_actors_ = {};
 }
 
 void Attack::Setup(World &world) {
@@ -68,22 +77,48 @@ void Attack::Setup(World &world) {
   material_->uniform( "uColor", color );
 }
 
-void Attack::Update(float time_scale, const World &world,
+void Attack::Update(float time_scale, World &world,
                     const InputController &controller) {
   ++frame_index_;
-  if (frame_index_ >= max_frames_ * frame_skip_) {
-    frame_index_ = 0;
+  if (frame_index_ >= frame_life_ * kFrameSkip) {
+    world.RemoveActor(this);
+    return;
   }
-  //velocity_ = direction * vec2(speed_);
+  vec2 direction = vec2(cos(rotation_), sin(rotation_));
+  velocity_ = direction * vec2(speed_);
 
   position_ += velocity_ * time_scale;
 
-  bool collision_occurred = false;
-  for (const Actor *actor : world.GetActors()) {
+  for (Actor *actor : world.GetActors()) {
+    auto iter = std::find(hit_actors_.begin(), hit_actors_.end(), actor);
+    if (iter != hit_actors_.end()) {
+      continue;
+    }
     if (actor != this && IsCollidingWithHitBox(*actor)) {
-      collision_occurred = true;
-      break;
+      actor->Damage(damage_);
+      hit_actors_.push_back(actor);
     }
   }
 }
+
+void Attack::Draw() const {
+  ci::gl::ScopedModelMatrix scpMtx;
+  ci::gl::translate(2*(position_.x - ci::app::getWindowSize().x / 2)
+                        /ci::app::getWindowSize().x,
+                    0,
+                    2*(position_.y - ci::app::getWindowSize().y / 2)
+                        /ci::app::getWindowSize().y);
+
+  int cur_frame = (int)std::floor((double)frame_index_ / kFrameSkip);
+  material_->uniform("frame", cur_frame % (max_frames_));
+
+  ci::gl::scale(0.125f,1,-0.125f);
+  ci::gl::rotate((float)rotation_);
+  rect_->draw();
+  ci::gl::setMatricesWindow(cinder::app::getWindowSize());
+  ci::gl::color(1,0,0,1);
+  ci::gl::drawLine(glm::vec2(hit_box_.x1_ + position_.x,hit_box_.y1_ + position_.y),
+                   glm::vec2(hit_box_.x2_ + position_.x,hit_box_.y2_ + position_.y));
+}
+
 }

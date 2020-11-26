@@ -16,12 +16,19 @@ Player::Player() : Actor(vec2(0,0), vec2(0,0), Rect(-20,-20,20,20),
       frame_index_(0), x_scale_(1),
       attack_direction_(AttackDirection::kNone),
       attack_frame_length_(12), attack_frame_(12),
-      can_attack_(true), attack_frame_delay_(12),
-      attacks_() {;
+      can_attack_(true), attack_frame_delay_(12) {
+  attacks_ = {nullptr, nullptr, nullptr, nullptr};
+  attacks_[AttackDirection::kUpAttack] = new Attack();
 }
 
 Player::Player(vec2 position) : Player() {
   position_ = position;
+}
+
+Player::~Player() {
+  for (Attack* attack : attacks_) {
+    delete attack;
+  }
 }
 
 void Player::Setup(World &world) {
@@ -115,9 +122,13 @@ void Player::Draw() const {
     ci::gl::scale((float)x_scale_ * 2.0f, 1, 2.0f);
     scythe_rect_->draw();
   }
+  //ci::gl::setMatricesWindow(cinder::app::getWindowSize());
+  //ci::gl::color(1,0,0,1);
+  //ci::gl::drawLine(glm::vec2(hit_box_.x1_ + position_.x,hit_box_.y1_ + position_.y),
+  //                 glm::vec2(hit_box_.x2_ + position_.x,hit_box_.y2_ + position_.y));
 }
 
-void Player::Update(float time_scale, const World &world,
+void Player::Update(float time_scale, World &world,
                     const InputController &controller) {
   ++frame_index_;
   if (frame_index_ >= kMaxFrames * kFrameSkip) {
@@ -131,16 +142,14 @@ void Player::Update(float time_scale, const World &world,
   direction = glm::normalize(direction);
   velocity_ = direction * vec2(speed_);
 
-
-
   if (controller.IsKeyPressed(Key::kAttackUp)) {
-    SetAttack(AttackDirection::kUpAttack);
+    AttackAtDirection(AttackDirection::kUpAttack, world);
   } else if (controller.IsKeyPressed(Key::kAttackDown)) {
-    SetAttack(AttackDirection::kDownAttack);
+    AttackAtDirection(AttackDirection::kDownAttack, world);
   } else if (controller.IsKeyPressed(Key::kAttackLeft)) {
-    SetAttack(AttackDirection::kLeftAttack);
+    AttackAtDirection(AttackDirection::kLeftAttack, world);
   } else if (controller.IsKeyPressed(Key::kAttackRight)) {
-    SetAttack(AttackDirection::kRightAttack);
+    AttackAtDirection(AttackDirection::kRightAttack, world);
   }
   if (attack_direction_ != AttackDirection::kNone) {
     ++attack_frame_;
@@ -172,11 +181,32 @@ void Player::Update(float time_scale, const World &world,
   }
 }
 
-void Player::SetAttack(AttackDirection attack_direction) {
+void Player::AttackAtDirection(AttackDirection attack_direction, World &world) {
+  if (attack_direction == kNone || attacks_[attack_direction] == nullptr) {
+    return;
+  }
   if (can_attack_) {
     attack_direction_ = attack_direction;
     can_attack_ = false;
     attack_frame_ = 0;
+    vec2 dir = vec2(0,0);
+    switch (attack_direction) {
+      case AttackDirection::kUpAttack:
+        dir = vec2(0, -1);
+        break;
+      case AttackDirection::kDownAttack:
+        dir = vec2(0, 1);
+        break;
+      case AttackDirection::kLeftAttack:
+        dir = vec2(-1, 0);
+        break;
+      case AttackDirection::kRightAttack:
+        dir = vec2(1, 0);
+        break;
+    }
+    Attack* attack = new Attack(*attacks_[attack_direction], attack_direction,
+                                position_ + dir * vec2((float)kAttackOffset));
+    world.AddActor(attack);
   }
 }
 

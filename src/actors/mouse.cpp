@@ -8,7 +8,7 @@
 namespace final_project {
 
 Mouse::Mouse() : Actor(vec2(0,0), vec2(0,0), Rect(0,0,0,0),
-            Rect(0,0,0,0), -1, -1, 0, {false, false, false, false}) {
+            Rect(0,0,0,0), -1, -1, 0, {false, false, false, false}, kNeutral) {
 }
 
 void Mouse::Setup(World &world) {
@@ -44,7 +44,7 @@ void Mouse::Setup(World &world) {
   material_->uniform( "uColor", color );
 }
 
-void Mouse::Update(float time_scale, const World &world,
+void Mouse::Update(float time_scale, World &world,
                     const InputController &controller) {
   position_ = cinder::app::getWindow()->getMousePos();
 }

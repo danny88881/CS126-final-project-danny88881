@@ -25,7 +25,7 @@ Actor::Actor(vec2 position, vec2 velocity, Rect collision, Rect hit_box,
 void Actor::Setup(World &world) {
 }
 
-void Actor::Update(float time_scale, const World &world,
+void Actor::Update(float time_scale, World &world,
             const InputController &controller) {
   position_ += velocity_ * vec2(time_scale);
 }
@@ -72,6 +72,10 @@ bool Actor::IsCollidingWithHitBox(const Actor &other_actor) {
     return false;
   else
     return true;
+}
+
+void Actor::Damage(double damage) {
+  health_ -= damage;
 }
 
 vec2 Actor::GetPosition() const {

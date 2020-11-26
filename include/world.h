@@ -33,6 +33,7 @@ class World {
 
   void AddActor(Actor* actor);
   void RemoveActor(Actor* actor);
+  void QueueRemoval(Actor* actor);
   vector<Actor*> GetActors() const;
 
   static constexpr vec2 kWindowSize = vec2(512, 512);

@@ -18,9 +18,11 @@ class Player : public Actor {
   Player();
   Player(vec2 position);
 
+  ~Player();
+
   virtual void Setup(World &world) override;
 
-  virtual void Update(float time_scale, const World &world,
+  virtual void Update(float time_scale, World &world,
                       const InputController &controller) override;
   virtual void Draw() const override;
  private:
@@ -32,8 +34,8 @@ class Player : public Actor {
   ci::gl::BatchRef scythe_rect_;
   ci::gl::GlslProgRef material_;
   ci::gl::GlslProgRef scythe_material_;
-  const int kFrameSkip = 10;
   const int kMaxFrames = 4;
+  const int kAttackOffset = 24;
   int frame_index_;
   int x_scale_;
 
@@ -43,9 +45,9 @@ class Player : public Actor {
   int attack_frame_length_;
   int attack_frame_delay_;
 
-  vector<Attack> attacks_;
+  vector<Attack*> attacks_;
 
-  void SetAttack(AttackDirection attack_direction);
+  void AttackAtDirection(AttackDirection attack_direction, World &world);
 };
 
 }

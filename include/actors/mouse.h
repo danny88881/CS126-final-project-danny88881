@@ -17,7 +17,7 @@ class Mouse : public Actor {
   Mouse();
 
   virtual void Setup(World &world);
-  virtual void Update(float time_scale, const World &world,
+  virtual void Update(float time_scale, World &world,
                       const InputController &controller) override;
   virtual void Draw() const override;
  private:

@@ -16,25 +16,25 @@ World::World() : time_scale_(1), texture_map_() {
                                          -(int)kWindowSize.y/2 - 50,
                                          50, (int)kWindowSize.y/2 + 50),
                            Rect(0,0,0,0),
-                           -1, -1, 0, {true, false, false, false});
+                           -1, -1, 0, {true, false, false, false}, kNeutral);
   auto border2 = new Actor(vec2((int)kWindowSize.x + 50,
                                 (int)kWindowSize.y / 2),
                            vec2(0), Rect(-50,
                                          -(int)kWindowSize.y/2 - 50,
                                          50, (int)kWindowSize.y/2 + 50),
                            Rect(0,0,0,0),
-                           -1, -1, 0, {true, false, false, false});
+                           -1, -1, 0, {true, false, false, false}, kNeutral);
   auto border3 = new Actor(vec2((int)kWindowSize.x / 2, -50),
                            vec2(0), Rect(-(int)kWindowSize.x - 50,
                                          -50,(int)kWindowSize.x + 50,50),
                            Rect(0,0,0,0),
-                           -1, -1, 0, {true, false, false, false});
+                           -1, -1, 0, {true, false, false, false}, kNeutral);
   auto border4 = new Actor(vec2((int)kWindowSize.x / 2,
                                 (int)kWindowSize.y + 50),
                            vec2(0), Rect(-(int)kWindowSize.x - 50,
                                          -50,(int)kWindowSize.x + 50,50),
                            Rect(0,0,0,0),
-                           -1, -1, 0, {true, false, false, false});
+                           -1, -1, 0, {true, false, false, false}, kNeutral);
   AddActor(border1);
   AddActor(border2);
   AddActor(border3);
@@ -42,7 +42,7 @@ World::World() : time_scale_(1), texture_map_() {
 }
 
 void World::Setup() {
-  camera_.lookAt(glm::vec3( 0, 1, 0 ), glm::vec3( 0 ) );
+  camera_.lookAt(glm::vec3( 0, 100, 0 ), glm::vec3( 0 ) );
   for (Actor* actor : actors_) {
     actor->Setup(*this);
   }
@@ -95,8 +95,8 @@ void World::Draw() {
 }
 
 void World::Update(const InputController &controller) {
-  for (Actor* actor : actors_) {
-    actor->Update(time_scale_, *this, controller);
+  for (size_t index = 0; index < actors_.size(); ++index) {
+    actors_[index]->Update(time_scale_, *this, controller);
   }
 }
 
@@ -125,13 +125,21 @@ int World::LoadTexture(const std::string &sprite_path) {
 }
 
 void World::AddActor(Actor *actor) {
+  actor->Setup(*this);
   actors_.push_back(actor);
 }
 
+void World::QueueRemoval(Actor *actor) {
+
+}
+
 void World::RemoveActor(Actor *actor) {
-  auto iter = std::find(actors_.begin(), actors_.end(), actor);
-  if (iter != actors_.end()) {
-    actors_.erase(iter);
+  for (size_t index = 0; index < actors_.size(); ++index) {
+    if (actors_[index] == actor) {
+      delete actor;
+      actors_.erase(actors_.begin() + index);
+      break;
+    }
   }
 }
 

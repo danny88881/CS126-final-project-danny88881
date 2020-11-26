@@ -12,7 +12,7 @@ namespace final_project {
 class World;
 
 enum AttackDirection {
-  kUpAttack,
+  kUpAttack = 0,
   kDownAttack,
   kLeftAttack,
   kRightAttack,
@@ -22,26 +22,24 @@ enum AttackDirection {
 class Attack : public Actor {
  public:
   Attack();
-  Attack(AttackDirection direction);
+  Attack(const Attack &attack, double rotation, vec2 position);
 
   virtual void Setup(World &world) override;
 
-  virtual void Update(float time_scale, const World &world,
+  virtual void Update(float time_scale, World &world,
                       const InputController &controller) override;
   virtual void Draw() const override;
  protected:
-  Attack(float damage, std::string sprite_sheet_path,
-         int max_frames, int frame_life);
-  AttackDirection direction_;
+  double rotation_;
   float damage_;
   std::string sprite_sheet_path_
       = "sprites/weapon/32slash.png";
   ci::gl::BatchRef rect_;
   ci::gl::GlslProgRef material_;
-  int frame_skip_ = 10;
   int max_frames_ = 4;
   int frame_index_;
-  int frame_life_;
+  float frame_life_;
+  vector<Actor*> hit_actors_;
 };
 
 }

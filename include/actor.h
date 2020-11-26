@@ -48,10 +48,10 @@ class Actor {
   /**
    * Updates the actor based on the passed timescale and a controller
    * @param time_scale the timescale of the world
-   * @param actors the actors in the same world
+   * @param world the world of the actor, may be modified
    * @param controller the player's controller
    */
-  virtual void Update(float time_scale, const World &world,
+  virtual void Update(float time_scale, World &world,
                       const InputController &controller);
 
   /**
@@ -75,6 +75,12 @@ class Actor {
    */
   virtual bool IsCollidingWithHitBox(const Actor &other_actor);
 
+  /**
+   * Subtracts health from the current actor
+   * @param damage the amount of damage to take
+   */
+  virtual void Damage(double damage);
+
   vec2 GetPosition() const;
   vec2 GetVelocity() const;
   double GetHealth() const;
@@ -91,6 +97,7 @@ class Actor {
   float speed_;
   vector<bool> collision_layers_;
   ActorType type_;
+  const static int kFrameSkip = 10;
 };
 
 }
