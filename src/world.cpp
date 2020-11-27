@@ -8,9 +8,10 @@
 
 namespace final_project {
 
-World::World() : time_scale_(1), texture_map_() {
+World::World() : time_scale_(1), texture_map_(), ui_(nullptr) {
   auto player = new Player(kWindowSize / vec2(2) + vec2(0, 100));
   AddActor(player);
+  ui_ = UserInterface(player);
   auto border1 = new Actor(vec2(-50, (int)kWindowSize.y / 2),
                            vec2(0), Rect(-50,
                                          -(int)kWindowSize.y/2 - 50,
@@ -42,7 +43,8 @@ World::World() : time_scale_(1), texture_map_() {
 }
 
 void World::Setup() {
-  camera_.lookAt(glm::vec3( 0, 100, 0 ), glm::vec3( 0 ) );
+  ui_.Setup(*this);
+  camera_.lookAt(glm::vec3( 0, 100, 0 ), glm::vec3(0));
   for (Actor* actor : actors_) {
     actor->Setup(*this);
   }
@@ -91,13 +93,16 @@ void World::Draw() {
 
   for (const Actor* actor : actors_) {
     actor->Draw();
+    ci::gl::setMatrices(camera_);
   }
+  ui_.Draw();
 }
 
 void World::Update(const InputController &controller) {
   for (size_t index = 0; index < actors_.size(); ++index) {
     actors_[index]->Update(time_scale_, *this, controller);
   }
+  ui_.Update();
 }
 
 int World::GetTextureIndex(const std::string &sprite_path) const {
@@ -127,10 +132,6 @@ int World::LoadTexture(const std::string &sprite_path) {
 void World::AddActor(Actor *actor) {
   actor->Setup(*this);
   actors_.push_back(actor);
-}
-
-void World::QueueRemoval(Actor *actor) {
-
 }
 
 void World::RemoveActor(Actor *actor) {

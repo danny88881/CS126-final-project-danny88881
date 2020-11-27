@@ -10,6 +10,7 @@
 #include "actor.h"
 #include "attack.h"
 #include "input_controller.h"
+#include "user_interface.h"
 
 namespace final_project {
 
@@ -34,12 +35,12 @@ class World {
 
   void AddActor(Actor* actor);
   void RemoveActor(Actor* actor);
-  void QueueRemoval(Actor* actor);
   vector<Actor*> GetActors() const;
 
   static constexpr vec2 kWindowSize = vec2(512, 512);
  private:
   vector<Actor*> actors_;
+  UserInterface ui_;
   float time_scale_;
   ci::CameraOrtho camera_;
   map<std::string, std::pair<ci::gl::TextureRef, int>> texture_map_;

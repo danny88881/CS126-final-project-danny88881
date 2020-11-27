@@ -18,7 +18,20 @@ Player::Player() : Actor(vec2(0,0), vec2(0,0), Rect(-20,-20,20,20),
       attack_frame_length_(12), attack_frame_(12),
       can_attack_(true), attack_frame_delay_(12) {
   attacks_ = {nullptr, nullptr, nullptr, nullptr};
-  attacks_[AttackDirection::kUpAttack] = new Attack();
+  auto attack = new Attack();
+  attacks_[AttackDirection::kUpAttack] = attack;
+  auto attack2 = new Attack(Rect(-16, -64, 16, 48), 0, ActorType::kPlayer, 1.5f,
+                            "sprites/weapon/Spear.png", "sprites/ui/Spear.png",
+                            3, 2, 3, 64, vec2(32, 64), {vec2(0, 3)}, true);
+  attacks_[AttackDirection::kRightAttack] = attack2;
+  auto attack3 = new Attack(Rect(-64, -64, 64, 64), 0, ActorType::kPlayer, 0.6f,
+                            "sprites/weapon/Magic.png", "sprites/ui/Magic.png",
+                            6, 3, 6, 84, vec2(64, 64), {vec2(3,5)}, false);
+  attacks_[AttackDirection::kDownAttack] = attack3;
+  auto attack4 = new Attack(Rect(-16, -16, 16, 16), 12, ActorType::kPlayer, 2.0f,
+                            "sprites/weapon/Arrow.png", "sprites/ui/Arrow.png",
+                            4, 2, 24, 24, vec2(16, 16), {vec2(0,100)}, true);
+  attacks_[AttackDirection::kLeftAttack] = attack4;
 }
 
 Player::Player(vec2 position) : Player() {
@@ -99,6 +112,12 @@ void Player::Setup(World &world) {
   scythe_rect_ = ci::gl::Batch::create(ci::geom::Plane(), scythe_material_);
   scythe_material_->uniform("uTex0", scythe_index);
   scythe_material_->uniform( "uColor", color );
+
+  for (Attack* attack : attacks_) {
+    if (attack != nullptr) {
+      attack->Setup(world);
+    }
+  }
 }
 
 void Player::Draw() const {
@@ -209,8 +228,9 @@ void Player::AttackAtDirection(AttackDirection attack_direction, World &world) {
         rotation = M_PI/2.0;
         break;
     }
-    Attack* attack = new Attack(*attacks_[attack_direction], rotation,
-                                position_ + dir * vec2((float)kAttackOffset));
+    Attack* attack = attacks_[attack_direction]->GetInstance(rotation,
+                                position_ + dir
+    * vec2((float)attacks_[attack_direction]->GetPositionOffset()));
     world.AddActor(attack);
   }
 }

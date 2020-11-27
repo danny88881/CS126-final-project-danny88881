@@ -97,7 +97,6 @@ class Actor {
   float speed_;
   vector<bool> collision_layers_;
   ActorType type_;
-  const static int kFrameSkip = 10;
 };
 
 }

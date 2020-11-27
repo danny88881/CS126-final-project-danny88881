@@ -37,7 +37,7 @@ class Player : public Actor {
   ci::gl::GlslProgRef material_;
   ci::gl::GlslProgRef scythe_material_;
   const int kMaxFrames = 4;
-  const int kAttackOffset = 24;
+  const int kFrameSkip = 8;
   int frame_index_;
   int x_scale_;
 
