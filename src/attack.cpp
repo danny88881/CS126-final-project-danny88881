@@ -11,7 +11,7 @@ namespace final_project {
 Attack::Attack() : Actor(vec2(0,0), vec2(0,0), Rect(0,0,0,0),
                           Rect(-32,-32,32,32), -1, -1, 0,
                           {false, false, false, false}, ActorType::kPlayer),
-      damage_(1), sprite_sheet_path_("sprites/weapon/Slash.png"),
+      damage_(1), knockback_(3) ,sprite_sheet_path_("sprites/weapon/Slash.png"),
       dimension_(32,32), max_frames_(3), frame_skip_(2), frame_life_(3),
       frame_index_(0), rotation_(0), hit_actors_(), sprite_icon_index_(0),
       position_offset_(24), active_intervals_({vec2(0,3)}),
@@ -30,6 +30,7 @@ Attack::Attack(const Attack &attack, double rotation, vec2 position) {
   collision_layers_ = attack.collision_layers_;
   type_ = attack.type_;
   damage_ = attack.damage_;
+  knockback_ = attack.knockback_;
   sprite_sheet_path_ = attack.sprite_sheet_path_;
   sprite_icon_path_ = attack.sprite_icon_path_;
   max_frames_ = attack.max_frames_;
@@ -44,14 +45,14 @@ Attack::Attack(const Attack &attack, double rotation, vec2 position) {
 }
 
 Attack::Attack(Rect hit_box, float speed, ActorType type, float damage,
-               std::string sprite_sheet_path, std::string sprite_icon_path,
-               int max_frames, int frame_skip, float frame_life,
-               int position_offset, vec2 dimension,
+               float knockback, std::string sprite_sheet_path,
+               std::string sprite_icon_path, int max_frames, int frame_skip,
+               float frame_life, int position_offset, vec2 dimension,
                vector<vec2> active_intervals, bool rotate_sprite)
     : Actor(vec2(0,0), vec2(0,0), Rect(0,0,0,0),
             hit_box, -1, -1, speed,
             {false, false, false, false}, type), damage_(damage),
-      sprite_sheet_path_(sprite_sheet_path),
+      knockback_(knockback), sprite_sheet_path_(sprite_sheet_path),
       sprite_icon_path_(sprite_icon_path), max_frames_(max_frames),
       frame_skip_(frame_skip), frame_life_(frame_life),
       position_offset_(position_offset), dimension_(dimension),
@@ -129,6 +130,9 @@ void Attack::Update(float time_scale, World &world,
       }
       if (actor != this && IsCollidingWithHitBox(*actor)) {
         actor->Damage(damage_);
+        vec2 knockback = glm::normalize(actor->GetPosition() - position_)
+            * vec2((float)knockback_);
+        actor->SetKnockback(knockback);
         hit_actors_.push_back(actor);
       }
     }

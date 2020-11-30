@@ -24,9 +24,10 @@ class Attack : public Actor {
   Attack();
   Attack(const Attack &attack, double rotation, vec2 position);
   Attack(Rect hit_box, float speed, ActorType type, float damage,
-         std::string sprite_sheet_path, std::string sprite_icon_path,
-         int max_frames, int frame_skip, float frame_life, int position_offset,
-         vec2 dimension, vector<vec2> active_intervals, bool rotate_sprite);
+         float knockback, std::string sprite_sheet_path,
+         std::string sprite_icon_path, int max_frames, int frame_skip,
+         float frame_life, int position_offset, vec2 dimension,
+         vector<vec2> active_intervals, bool rotate_sprite);
 
   virtual void Setup(World &world) override;
   virtual void Update(float time_scale, World &world,
@@ -46,6 +47,7 @@ class Attack : public Actor {
  protected:
   double rotation_;
   float damage_;
+  float knockback_;
   std::string sprite_sheet_path_
       = "sprites/weapon/Slash.png";
   std::string sprite_icon_path_

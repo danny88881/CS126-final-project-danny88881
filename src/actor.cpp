@@ -8,8 +8,9 @@
 
 namespace final_project {
 
-Actor::Actor() : position_(0,0), velocity_(0,0), max_health_(3),
-      health_(max_health_), speed_(5), collision_(-10, -10, 10, 10),
+Actor::Actor() : position_(0,0), velocity_(0,0),
+      knockback_velocity_(0), max_health_(3), health_(max_health_), speed_(5),
+      collision_(-10, -10, 10, 10),
       hit_box_(-10, -10, 10, 10), collision_layers_(4, false),
       type_(kNeutral) {
 }
@@ -19,7 +20,8 @@ Actor::Actor(vec2 position, vec2 velocity, Rect collision, Rect hit_box,
              vector<bool> collision_layers, ActorType type) :
       position_(position), velocity_(velocity), collision_(collision),
       hit_box_(hit_box), max_health_(max_health), health_(health),
-      speed_(speed), collision_layers_(collision_layers), type_(type)
+      speed_(speed), collision_layers_(collision_layers), type_(type),
+      knockback_velocity_(0)
 {}
 
 void Actor::Setup(World &world) {
@@ -92,6 +94,10 @@ double Actor::GetHealth() const {
 
 double Actor::GetMaxHealth() const {
   return max_health_;
+}
+
+void Actor::SetKnockback(vec2 knockback) {
+  knockback_velocity_ = knockback;
 }
 
 }

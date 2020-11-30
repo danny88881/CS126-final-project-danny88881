@@ -81,6 +81,12 @@ class Actor {
    */
   virtual void Damage(double damage);
 
+  /**
+   * Sets the knockback velocity of the current actor
+   * @param knockback the knockback velocity to set
+   */
+  virtual void SetKnockback(vec2 knockback);
+
   vec2 GetPosition() const;
   vec2 GetVelocity() const;
   double GetHealth() const;

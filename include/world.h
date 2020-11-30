@@ -36,9 +36,24 @@ class World {
   void AddActor(Actor* actor);
   void RemoveActor(Actor* actor);
   vector<Actor*> GetActors() const;
+  Player* GetPlayer() const;
 
   static constexpr vec2 kWindowSize = vec2(512, 512);
+
+  const vector<Attack*> player_attacks_ = {
+      new Attack(Rect(-16, -64, 16, 48), 0, ActorType::kPlayer, 1.5f, 4,
+                 "sprites/weapon/Spear.png", "sprites/ui/Spear.png",
+                 3, 3, 3, 64, vec2(32, 64), {vec2(0, 3)}, true),
+      new Attack(Rect(-64, -64, 64, 64), 0, ActorType::kPlayer, 0.6f, 7,
+                 "sprites/weapon/Magic.png", "sprites/ui/Magic.png",
+                 6, 3, 6, 84, vec2(64, 64), {vec2(3,5)}, false),
+      new Attack(Rect(-16, -16, 16, 16), 12, ActorType::kPlayer, 2.0f, 2,
+                 "sprites/weapon/Arrow.png", "sprites/ui/Arrow.png",
+                 4, 2, 24, 24, vec2(16, 16), {vec2(0,100)}, true),
+      new Attack()
+  };
  private:
+  Player* player_;
   vector<Actor*> actors_;
   UserInterface ui_;
   float time_scale_;
@@ -48,12 +63,6 @@ class World {
       = "sprites/environment/Floor.png";
   ci::gl::BatchRef floor_rect_;
   ci::gl::GlslProgRef floor_material_;
-  const vector<Attack*> player_attacks_ = {
-      new Attack(),
-      new Attack(),
-      new Attack(),
-      new Attack()
-  };
 };
 
 }

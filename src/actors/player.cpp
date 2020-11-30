@@ -21,14 +21,17 @@ Player::Player() : Actor(vec2(0,0), vec2(0,0), Rect(-20,-20,20,20),
   auto attack = new Attack();
   attacks_[AttackDirection::kUpAttack] = attack;
   auto attack2 = new Attack(Rect(-16, -64, 16, 48), 0, ActorType::kPlayer, 1.5f,
+                            4,
                             "sprites/weapon/Spear.png", "sprites/ui/Spear.png",
-                            3, 2, 3, 64, vec2(32, 64), {vec2(0, 3)}, true);
+                            3, 3, 3, 64, vec2(32, 64), {vec2(0, 3)}, true);
   attacks_[AttackDirection::kRightAttack] = attack2;
   auto attack3 = new Attack(Rect(-64, -64, 64, 64), 0, ActorType::kPlayer, 0.6f,
+                            7,
                             "sprites/weapon/Magic.png", "sprites/ui/Magic.png",
                             6, 3, 6, 84, vec2(64, 64), {vec2(3,5)}, false);
   attacks_[AttackDirection::kDownAttack] = attack3;
   auto attack4 = new Attack(Rect(-16, -16, 16, 16), 12, ActorType::kPlayer, 2.0f,
+                            2,
                             "sprites/weapon/Arrow.png", "sprites/ui/Arrow.png",
                             4, 2, 24, 24, vec2(16, 16), {vec2(0,100)}, true);
   attacks_[AttackDirection::kLeftAttack] = attack4;
@@ -124,7 +127,8 @@ void Player::Draw() const {
   ci::gl::ScopedModelMatrix scpMtx;
   ci::gl::translate(2*(position_.x - ci::app::getWindowSize().x / 2)
                         /ci::app::getWindowSize().x,
-                    0,
+                    (position_.y - ci::app::getWindowSize().y / 2)
+                        /ci::app::getWindowSize().y,
                     2*(position_.y - ci::app::getWindowSize().y / 2)
                         /ci::app::getWindowSize().y);
 
@@ -160,6 +164,10 @@ void Player::Update(float time_scale, World &world,
   vec2 direction(hdir, vdir);
   direction = glm::normalize(direction);
   velocity_ = direction * vec2(speed_);
+  if (glm::length(knockback_velocity_) >= 1) {
+    velocity_ = knockback_velocity_;
+    knockback_velocity_ *= 0.8;
+  }
 
   if (controller.IsKeyPressed(Key::kAttackUp)) {
     AttackAtDirection(AttackDirection::kUpAttack, world);
@@ -198,6 +206,10 @@ void Player::Update(float time_scale, World &world,
   if (collision_occurred) {
     position_ = last_position;
   }
+}
+
+void Player::Damage(double damage) {
+  health_ -= damage;
 }
 
 void Player::AttackAtDirection(AttackDirection attack_direction, World &world) {

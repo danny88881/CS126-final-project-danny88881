@@ -4,6 +4,7 @@
 
 #include "actors/player.h"
 #include "actors/mouse.h"
+#include "actors/slime.h"
 #include "world.h"
 
 namespace final_project {
@@ -11,6 +12,9 @@ namespace final_project {
 World::World() : time_scale_(1), texture_map_(), ui_(nullptr) {
   auto player = new Player(kWindowSize / vec2(2) + vec2(0, 100));
   AddActor(player);
+  player_ = player;
+  auto slime = new Slime(kWindowSize / vec2(2));
+  AddActor(slime);
   ui_ = UserInterface(player);
   auto border1 = new Actor(vec2(-50, (int)kWindowSize.y / 2),
                            vec2(0), Rect(-50,
@@ -146,6 +150,10 @@ void World::RemoveActor(Actor *actor) {
 
 vector<Actor*> World::GetActors() const {
   return vector<Actor*>(actors_);
+}
+
+Player* World::GetPlayer() const {
+  return player_;
 }
 
 }

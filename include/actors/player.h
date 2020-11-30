@@ -26,6 +26,8 @@ class Player : public Actor {
                       const InputController &controller) override;
   virtual void Draw() const override;
 
+  virtual void Damage(double damage) override;
+
   vector<Attack*> GetAttacks() const;
  private:
   const std::string kSpriteSheetPath
