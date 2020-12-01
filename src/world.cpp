@@ -96,15 +96,27 @@ void World::Draw() {
   ci::gl::popModelMatrix();
 
   for (const Actor* actor : actors_) {
-    actor->Draw();
+    if (!actor->GetFreed()) {
+      actor->Draw();
+    }
     ci::gl::setMatrices(camera_);
   }
   ui_.Draw();
 }
 
 void World::Update(const InputController &controller) {
+  for (Actor* actor : removal_queue_) {
+    RemoveActor(actor);
+  }
+  removal_queue_.clear();
   for (size_t index = 0; index < actors_.size(); ++index) {
-    actors_[index]->Update(time_scale_, *this, controller);
+    if (!actors_[index]->GetFreed()) {
+      actors_[index]->Update(time_scale_, *this, controller);
+      if (glm::distance(vec2(256), actors_[index]->GetPosition()) >
+          kPlatformSize) {
+        actors_[index]->Damage(100);
+      }
+    }
   }
   ui_.Update();
 }
@@ -138,7 +150,15 @@ void World::AddActor(Actor *actor) {
   actors_.push_back(actor);
 }
 
-void World::RemoveActor(Actor *actor) {
+void World::QueueFree(Actor* actor) {
+  if (std::find(removal_queue_.begin(), removal_queue_.end(), actor)
+       != removal_queue_.end()) {
+    return;
+  }
+  removal_queue_.push_back(actor);
+}
+
+void World::RemoveActor(Actor* actor) {
   for (size_t index = 0; index < actors_.size(); ++index) {
     if (actors_[index] == actor) {
       delete actor;

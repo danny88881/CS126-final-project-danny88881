@@ -19,7 +19,7 @@ void Slime::Update(float time_scale, World &world,
   }
   vec2 last_position = position_;
 
-  if (glm::length(velocity_) < 0.05) {
+  if (glm::length(velocity_) < 0.02) {
     velocity_ = glm::normalize(world.GetPlayer()->GetPosition() - position_)
                 * speed_;
   } else {
@@ -50,6 +50,11 @@ void Slime::Update(float time_scale, World &world,
                  * vec2((float)kKnockbackForce);
       actor->SetKnockback(knockback);
     }
+  }
+
+  if (health_ <= 0) {
+    world.QueueFree(this);
+    return;
   }
 }
 

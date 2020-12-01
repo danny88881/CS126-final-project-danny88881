@@ -34,8 +34,8 @@ class World {
   int LoadTexture(const std::string &sprite_path);
 
   void AddActor(Actor* actor);
-  void RemoveActor(Actor* actor);
   vector<Actor*> GetActors() const;
+  void QueueFree(Actor* actor);
   Player* GetPlayer() const;
 
   static constexpr vec2 kWindowSize = vec2(512, 512);
@@ -55,6 +55,7 @@ class World {
  private:
   Player* player_;
   vector<Actor*> actors_;
+  vector<Actor*> removal_queue_;
   UserInterface ui_;
   float time_scale_;
   ci::CameraOrtho camera_;
@@ -63,6 +64,9 @@ class World {
       = "sprites/environment/Floor.png";
   ci::gl::BatchRef floor_rect_;
   ci::gl::GlslProgRef floor_material_;
+  const int kPlatformSize = 160;
+
+  void RemoveActor(Actor* actor);
 };
 
 }

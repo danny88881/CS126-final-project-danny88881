@@ -11,7 +11,7 @@ namespace final_project {
 Attack::Attack() : Actor(vec2(0,0), vec2(0,0), Rect(0,0,0,0),
                           Rect(-32,-32,32,32), -1, -1, 0,
                           {false, false, false, false}, ActorType::kPlayer),
-      damage_(1), knockback_(3) ,sprite_sheet_path_("sprites/weapon/Slash.png"),
+      damage_(1), knockback_(5) ,sprite_sheet_path_("sprites/weapon/Slash.png"),
       dimension_(32,32), max_frames_(3), frame_skip_(2), frame_life_(3),
       frame_index_(0), rotation_(0), hit_actors_(), sprite_icon_index_(0),
       position_offset_(24), active_intervals_({vec2(0,3)}),
@@ -104,10 +104,12 @@ void Attack::Setup(World &world) {
 
 void Attack::Update(float time_scale, World &world,
                     const InputController &controller) {
-  ++frame_index_;
-  if (frame_index_ >= frame_life_ * frame_skip_) {
-    world.RemoveActor(this);
+  if (frame_index_ >= frame_life_ * frame_skip_ - 1) {
+    world.QueueFree(this);
+    freed_ = true;
     return;
+  } else {
+    ++frame_index_;
   }
   vec2 direction = vec2(sin(rotation_), cos(rotation_));
   velocity_ = direction * vec2(speed_);
@@ -130,7 +132,8 @@ void Attack::Update(float time_scale, World &world,
       }
       if (actor != this && IsCollidingWithHitBox(*actor)) {
         actor->Damage(damage_);
-        vec2 knockback = glm::normalize(actor->GetPosition() - position_)
+        vec2 knockback = glm::normalize(actor->GetPosition()
+                                        - world.GetPlayer()->GetPosition())
             * vec2((float)knockback_);
         actor->SetKnockback(knockback);
         hit_actors_.push_back(actor);

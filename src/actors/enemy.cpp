@@ -16,6 +16,8 @@ Enemy::Enemy(std::string sprite_sheet_path, int max_frames, int frame_skip,
             {false, true, false, false}, ActorType::kEnemy) {
 }
 
+
+
 void Enemy::Setup(World &world) {
   int index = world.LoadTexture(sprite_sheet_path_);
   material_ = ci::gl::GlslProg::create(
@@ -78,4 +80,5 @@ void Enemy::Draw() const {
   //ci::gl::drawLine(glm::vec2(hit_box_.x1_ + position_.x,hit_box_.y1_ + position_.y),
   //                 glm::vec2(hit_box_.x2_ + position_.x,hit_box_.y2_ + position_.y));
 }
+
 }

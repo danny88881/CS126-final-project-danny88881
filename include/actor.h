@@ -91,6 +91,7 @@ class Actor {
   vec2 GetVelocity() const;
   double GetHealth() const;
   double GetMaxHealth() const;
+  bool GetFreed() const;
 
  protected:
   vec2 position_;
@@ -103,6 +104,7 @@ class Actor {
   float speed_;
   vector<bool> collision_layers_;
   ActorType type_;
+  bool freed_;
 };
 
 }
