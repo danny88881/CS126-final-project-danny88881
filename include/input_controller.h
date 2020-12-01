@@ -19,8 +19,12 @@ enum Key {
   kDown,
   kLeft,
   kRight,
+  kAttackUp,
+  kAttackDown,
+  kAttackLeft,
+  kAttackRight,
 
-  kLength = 4 // solution proposed on stack overflow - END MARKER
+  kLength = 8 // solution proposed on stack overflow - END MARKER
 };
 
 class InputController {
@@ -45,15 +49,22 @@ class InputController {
    * @return a boolean representing the state of the key
    */
   bool IsKeyPressed(Key key) const;
+
+  void SetMouseState(bool mouse_state);
+  bool GetMouseState() const;
  private:
   vector<bool> key_pressed_;
-
   vector<int> key_to_event_ {
       KeyEvent::KEY_w,
       KeyEvent::KEY_s,
       KeyEvent::KEY_a,
-      KeyEvent::KEY_d
-  }; // not const so user can change key bindings in game
+      KeyEvent::KEY_d,
+      KeyEvent::KEY_UP,
+      KeyEvent::KEY_DOWN,
+      KeyEvent::KEY_LEFT,
+      KeyEvent::KEY_RIGHT,
+  }; // not const so key remapping could be a feature
+  bool mouse_down_;
 };
 
 }

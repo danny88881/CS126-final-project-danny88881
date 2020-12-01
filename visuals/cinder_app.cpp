@@ -8,7 +8,14 @@ namespace final_project {
 
 namespace graphics {
 
-CinderApp::CinderApp() : world_(), controller_() {}
+CinderApp::CinderApp() : world_(), controller_() {
+  ci::app::setWindowSize(World::kWindowSize);
+  //hideCursor();
+}
+
+void CinderApp::setup() {
+  world_.Setup();
+}
 
 void CinderApp::update() {
   world_.Update(controller_);
@@ -24,6 +31,18 @@ void CinderApp::keyUp(ci::app::KeyEvent event) {
 
 void CinderApp::keyDown(ci::app::KeyEvent event) {
   controller_.KeyPress(event);
+}
+
+void CinderApp::mouseUp(ci::app::MouseEvent event) {
+  if (event.isLeft()) {
+    controller_.SetMouseState(false);
+  }
+}
+
+void CinderApp::mouseDown(ci::app::MouseEvent event) {
+  if (event.isLeft()) {
+    controller_.SetMouseState(true);
+  }
 }
 
 }

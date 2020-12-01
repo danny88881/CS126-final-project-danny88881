@@ -19,11 +19,14 @@ class CinderApp : public ci::app::App {
  public:
   CinderApp();
 
+  void setup() override;
   void update() override;
   void draw() override;
 
   void keyUp(ci::app::KeyEvent event) override;
   void keyDown(ci::app::KeyEvent event) override;
+  void mouseUp(ci::app::MouseEvent event) override;
+  void mouseDown(ci::app::MouseEvent event) override;
 
  private:
   World world_;
