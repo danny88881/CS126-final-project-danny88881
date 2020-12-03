@@ -132,6 +132,9 @@ void Attack::Update(float time_scale, World &world,
       }
       if (actor != this && IsCollidingWithHitBox(*actor)) {
         actor->Damage(damage_);
+        if (world.GetPlayer() == nullptr) {
+          return;
+        }
         vec2 knockback = glm::normalize(actor->GetPosition()
                                         - world.GetPlayer()->GetPosition())
             * vec2((float)knockback_);
