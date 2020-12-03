@@ -46,6 +46,17 @@ World::World() : time_scale_(1), texture_map_(), ui_(nullptr) {
   AddActor(border4);
 }
 
+World::~World() {
+  for (Actor* actor : removal_queue_) {
+    RemoveActor(actor);
+  }
+  removal_queue_.clear();
+  for (Actor* actor : actors_) {
+    RemoveActor(actor);
+  }
+  actors_.clear();
+}
+
 void World::Setup() {
   ui_.Setup(*this);
   camera_.lookAt(glm::vec3( 0, 100, 0 ), glm::vec3(0));

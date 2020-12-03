@@ -64,14 +64,12 @@ void Player::Setup(World &world) {
           .fragment(CI_GLSL(
                         150,
                         uniform sampler2D uTex0;
-                            uniform sampler2D uTex1;
                             uniform vec4 uColor;
                             uniform int frame;
                             uniform int max_frames;
                             in vec2 TexCoord0;
                             out vec4 oColor;
                             void main(void) {
-
                               float u = TexCoord0.x * (1.0 / max_frames)
                               + (frame) * 1.0 / max_frames;
 

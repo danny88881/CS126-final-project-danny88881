@@ -24,18 +24,35 @@ class World {
    * Creates a world with a player and boundaries
    */
   World();
+  ~World();
 
   void Setup();
   void Update(const InputController &controller);
   void Draw();
 
+  /**
+   * Gets the index that the spirte is bound to
+   * @param sprite_path the path of the sprite
+   * @return the index that the sprite is bound to
+   */
   int GetTextureIndex(const std::string &sprite_path) const;
 
+  /**
+   * Loads a texture into the current texture map
+   * @param sprite_path the path of the texture to load
+   * @return the int that the texture is bound to
+   */
   int LoadTexture(const std::string &sprite_path);
 
   void AddActor(Actor* actor);
   vector<Actor*> GetActors() const;
+
+  /**
+   * Queues the passed actor for destruction on the next update tick
+   * @param actor the actor to be destroyed
+   */
   void QueueFree(Actor* actor);
+
   Player* GetPlayer() const;
 
   static constexpr vec2 kWindowSize = vec2(512, 512);
