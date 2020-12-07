@@ -4,7 +4,6 @@
 
 #include "cinder/gl/gl.h"
 #include "world.h"
-#include "actors/pickup.h"
 #include "actors/player.h"
 
 namespace final_project {
@@ -191,7 +190,7 @@ void Player::Update(float time_scale, World &world,
   if (collision_occurred) {
     position_ = last_position;
   }
-  
+
   if (health_ <= 0) {
     world.QueueFree(this);
     return;

@@ -10,7 +10,17 @@
 namespace final_project {
 
 World::World() : time_scale_(1), texture_map_(), ui_(), last_spawn_time_(0),
-  spawn_interval_(1), points_(0) {
+  spawn_interval_(1), points_(0) {}
+
+void World::StartGame() {
+  for (Actor* actor : removal_queue_) {
+    RemoveActor(actor);
+  }
+  removal_queue_.clear();
+  for (Actor* actor : actors_) {
+    RemoveActor(actor);
+  }
+  actors_.clear();
   srand((size_t)time(NULL));// http://www.cplusplus.com/reference/cstdlib/srand/
   auto player = new Player(kWindowSize / vec2(2));
   AddActor(player);

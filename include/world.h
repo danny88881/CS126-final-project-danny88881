@@ -8,7 +8,6 @@
 #include "cinder/gl/gl.h"
 #include <vector>
 #include "actor.h"
-#include "actors/pickup.h"
 #include "actors/player.h"
 #include "attack.h"
 #include "input_controller.h"
@@ -31,6 +30,8 @@ class World {
   void Setup();
   void Update(const InputController &controller);
   void Draw();
+
+  void StartGame();
 
   /**
    * Gets the index that the spirte is bound to
