@@ -9,11 +9,12 @@ namespace final_project {
 
 Enemy::Enemy(std::string sprite_sheet_path, int max_frames, int frame_skip,
              vec2 position, vec2 velocity, Rect collision, Rect hit_box,
-             double max_health, double health, float speed)
+             double max_health, double health, float speed, glm::vec4 modulate)
     : sprite_sheet_path_(sprite_sheet_path), max_frames_(max_frames),
       frame_skip_(frame_skip), frame_index_(0), x_scale_(1),
       Actor(position, velocity, collision, hit_box, max_health, health, speed,
-            {false, true, false, false}, ActorType::kEnemy) {
+            {false, true, false, false}, ActorType::kEnemy),
+      modulate_(modulate) {
 }
 
 
@@ -53,11 +54,10 @@ void Enemy::Setup(World &world) {
                             }))
   );
   rect_ = ci::gl::Batch::create(ci::geom::Plane(), material_);
-  ci::ColorAf color( 1,1,1,1 );
   material_->uniform("uTex0", index);
   material_->uniform("frame", 0);
   material_->uniform("max_frames", max_frames_);
-  material_->uniform( "uColor", color );
+  material_->uniform( "uColor", modulate_);
 }
 
 void Enemy::Draw() const {
@@ -71,7 +71,6 @@ void Enemy::Draw() const {
 
   int cur_frame = (int)std::floor((double)frame_index_ / frame_skip_);
   material_->uniform("frame", cur_frame);
-
 
   ci::gl::scale((float)x_scale_ * 0.0625f,1,-0.0625f);
   rect_->draw();

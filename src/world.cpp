@@ -2,20 +2,31 @@
 // Created by Danny on 11/15/2020.
 //
 
-#include "actors/player.h"
-#include "actors/mouse.h"
-#include "actors/slime.h"
 #include "world.h"
+
+#include "actors/mouse.h"
+#include "actors/player.h"
+#include "actors/slime.h"
 
 namespace final_project {
 
-World::World() : time_scale_(1), texture_map_(), ui_(nullptr) {
-  auto player = new Player(kWindowSize / vec2(2) + vec2(0, 100));
+World::World() : time_scale_(1), texture_map_(), ui_(), last_spawn_time_(0),
+  spawn_interval_(1), points_(0) {}
+
+void World::StartGame() {
+  points_ = 0;
+  for (Actor* actor : removal_queue_) {
+    RemoveActor(actor);
+  }
+  removal_queue_.clear();
+  for (Actor* actor : actors_) {
+    RemoveActor(actor);
+  }
+  actors_.clear();
+  srand((size_t)time(NULL));// http://www.cplusplus.com/reference/cstdlib/srand/
+  auto player = new Player(kWindowSize / vec2(2));
   AddActor(player);
   player_ = player;
-  auto slime = new Slime(kWindowSize / vec2(2));
-  AddActor(slime);
-  ui_ = UserInterface(player);
   auto border1 = new Actor(vec2(-50, (int)kWindowSize.y / 2),
                            vec2(0), Rect(-50,
                                          -(int)kWindowSize.y/2 - 50,
@@ -46,11 +57,26 @@ World::World() : time_scale_(1), texture_map_(), ui_(nullptr) {
   AddActor(border4);
 }
 
+World::~World() {
+  for (Actor* actor : removal_queue_) {
+    RemoveActor(actor);
+  }
+  removal_queue_.clear();
+  for (Actor* actor : actors_) {
+    RemoveActor(actor);
+  }
+  actors_.clear();
+}
+
 void World::Setup() {
   ui_.Setup(*this);
   camera_.lookAt(glm::vec3( 0, 100, 0 ), glm::vec3(0));
   for (Actor* actor : actors_) {
     actor->Setup(*this);
+  }
+
+  for (Attack* attack : kPlayerAttacks) {
+    attack->Setup(*this);
   }
 
   int index = LoadTexture(kFloorSpritePath);
@@ -105,6 +131,14 @@ void World::Draw() {
 }
 
 void World::Update(const InputController &controller) {
+  if (time(NULL) - last_spawn_time_ > spawn_interval_) {
+    last_spawn_time_ = time(NULL);
+    float rand_ang = (float)M_PI * (float)(rand() % 360) / 180.0f;
+    vec2 pos = vec2(cos(rand_ang), sin(rand_ang))
+               * vec2((float)(rand() % kSpawnAreaSize)) + kWindowSize/vec2(2);
+    auto enemy = new Slime(pos);
+    AddActor(enemy);
+  }
   for (Actor* actor : removal_queue_) {
     RemoveActor(actor);
   }
@@ -118,7 +152,13 @@ void World::Update(const InputController &controller) {
       }
     }
   }
-  ui_.Update();
+  ui_.Update(*this);
+  if (player_ == nullptr && (controller.IsKeyPressed(kAttackUp)
+                             || controller.IsKeyPressed(kAttackDown)
+                             || controller.IsKeyPressed(kAttackLeft)
+                             || controller.IsKeyPressed(kAttackRight))) {
+    StartGame();
+  }
 }
 
 int World::GetTextureIndex(const std::string &sprite_path) const {
@@ -136,7 +176,7 @@ int World::LoadTexture(const std::string &sprite_path) {
   }
   auto img = cinder::loadImage(ci::app::loadAsset(sprite_path));
   auto sprite = ci::gl::Texture2d::create(img);
-  int index = texture_map_.size();
+  int index = texture_map_.size() + 10;
   texture_map_.emplace(sprite_path,
                        std::pair<ci::gl::TextureRef, int>(sprite, index));
   sprite->bind(index);
@@ -159,6 +199,9 @@ void World::QueueFree(Actor* actor) {
 }
 
 void World::RemoveActor(Actor* actor) {
+  if (actor == player_) {
+    player_ = nullptr;
+  }
   for (size_t index = 0; index < actors_.size(); ++index) {
     if (actors_[index] == actor) {
       delete actor;
@@ -174,6 +217,14 @@ vector<Actor*> World::GetActors() const {
 
 Player* World::GetPlayer() const {
   return player_;
+}
+
+int World::GetPoints() const {
+  return points_;
+}
+
+void World::AddPoint() {
+  ++points_;
 }
 
 }
