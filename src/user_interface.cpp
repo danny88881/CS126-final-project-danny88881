@@ -123,6 +123,7 @@ void UserInterface::DrawKeyBox(Attack *attack) {
 
 void UserInterface::Update(World &world) {
   if (world.GetPlayer() != nullptr) {
+    player_dead_ = false;
     player_attacks_ = world.GetPlayer()->GetAttacks();
     player_attack_count_ = world.GetPlayer()->GetAttackCount();
   } else {

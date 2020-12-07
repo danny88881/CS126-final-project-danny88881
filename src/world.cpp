@@ -14,6 +14,7 @@ World::World() : time_scale_(1), texture_map_(), ui_(), last_spawn_time_(0),
   spawn_interval_(1), points_(0) {}
 
 void World::StartGame() {
+  points_ = 0;
   for (Actor* actor : removal_queue_) {
     RemoveActor(actor);
   }
@@ -152,6 +153,12 @@ void World::Update(const InputController &controller) {
     }
   }
   ui_.Update(*this);
+  if (player_ == nullptr && (controller.IsKeyPressed(kAttackUp)
+                             || controller.IsKeyPressed(kAttackDown)
+                             || controller.IsKeyPressed(kAttackLeft)
+                             || controller.IsKeyPressed(kAttackRight))) {
+    StartGame();
+  }
 }
 
 int World::GetTextureIndex(const std::string &sprite_path) const {
