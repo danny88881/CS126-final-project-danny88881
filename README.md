@@ -17,4 +17,5 @@ a - left
 
 d - right
 
-Arrow keys - Attacking
+Arrow keys - Attacking and replay game
+
