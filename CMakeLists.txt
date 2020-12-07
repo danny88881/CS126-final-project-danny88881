@@ -55,7 +55,8 @@ list(APPEND CORE_SOURCE_FILES src/actor.cpp src/world.cpp src/input_controller.c
 list(APPEND SOURCE_FILES    ${CORE_SOURCE_FILES}
         visuals/cinder_app.cpp)
 
-list(APPEND TEST_FILES tests/actor_test.cpp tests/attack_test.cpp tests/input_controller_test.cpp)
+list(APPEND TEST_FILES tests/actor_test.cpp tests/attack_test.cpp tests/input_controller_test.cpp tests/world_test.cpp
+        tests/user_interface_test.cpp)
 
 ci_make_app(
         APP_NAME        final-project-run

@@ -6,6 +6,9 @@
 #include "actor.h"
 #include "world.h"
 #include "input_controller.h"
+#include "actors/player.h"
+#include "actors/enemy.h"
+#include "actors/slime.h"
 #include "cinder/gl/gl.h"
 
 namespace final_project {
@@ -170,6 +173,54 @@ TEST_CASE("Actor IsCollidingWithHitbox") {
     Actor actor3(vec2(10), vec2(0), Rect(-50, -50, 50, 50), Rect(0, 0, 0, 0),
                  -1, -1, 0, {false, true, false, false}, ActorType::kNeutral);
     REQUIRE(actor2.IsCollidingWithHitBox(actor3));
+  }
+}
+
+TEST_CASE("Actor Damage") {
+  SECTION("Positive Damage", "[positive]") {
+    Actor actor;
+    REQUIRE_NOTHROW(actor.Damage(10));
+    REQUIRE(actor.GetHealth() == actor.GetMaxHealth() - 10);
+  }
+
+  SECTION("Zero Damage", "[zero]") {
+    Actor actor;
+    REQUIRE_NOTHROW(actor.Damage(0));
+    REQUIRE(actor.GetHealth() == actor.GetMaxHealth());
+  }
+
+  SECTION("Negative Damage", "[negative]") {
+    Actor actor;
+    REQUIRE_NOTHROW(actor.Damage(-10));
+    REQUIRE(actor.GetHealth() == actor.GetMaxHealth() + 10);
+  }
+}
+
+TEST_CASE("Player") {
+  SECTION("Constructor", "[constructor]") {
+    SECTION("Default", "[default]") {
+      REQUIRE_NOTHROW(Player());
+    }
+
+    SECTION("Parameterized", "[params]") {
+      REQUIRE_NOTHROW(Player(vec2(0)));
+    }
+  }
+}
+
+TEST_CASE("Enemy") {
+  SECTION("Constructor", "[constructor]") {
+    REQUIRE_NOTHROW(Enemy("sprites/enemies/slime.png", 2, 16, vec2(0),
+          vec2(0), Rect(-10,-10,10,10), Rect(-15,-15,15,15), 3, 3, 4,
+          glm::vec4((rand() % 256) / 256.0f,
+                    (rand() % 256) / 256.0f,
+                    (rand() % 256) / 256.0f, 1)));
+  }
+}
+
+TEST_CASE("Slime") {
+  SECTION("Constructor", "[constructor]") {
+    REQUIRE_NOTHROW(Slime(vec2(0)));
   }
 }
 

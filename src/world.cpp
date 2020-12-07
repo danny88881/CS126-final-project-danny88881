@@ -2,10 +2,11 @@
 // Created by Danny on 11/15/2020.
 //
 
-#include "actors/player.h"
-#include "actors/mouse.h"
-#include "actors/slime.h"
 #include "world.h"
+
+#include "actors/mouse.h"
+#include "actors/player.h"
+#include "actors/slime.h"
 
 namespace final_project {
 

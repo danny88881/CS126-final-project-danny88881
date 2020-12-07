@@ -5,11 +5,12 @@
 #ifndef FINAL_PROJECT_INCLUDE_WORLD_H_
 #define FINAL_PROJECT_INCLUDE_WORLD_H_
 
-#include "cinder/gl/gl.h"
 #include <vector>
+
 #include "actor.h"
 #include "actors/player.h"
 #include "attack.h"
+#include "cinder/gl/gl.h"
 #include "input_controller.h"
 #include "user_interface.h"
 

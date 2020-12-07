@@ -2,9 +2,10 @@
 // Created by Danny on 11/15/2020.
 //
 
+#include "actors/player.h"
+
 #include "cinder/gl/gl.h"
 #include "world.h"
-#include "actors/player.h"
 
 namespace final_project {
 
