@@ -18,6 +18,7 @@ class Slime : public Enemy {
  private:
   int kDamage = 1;
   int kKnockbackForce = 3;
+  double last_hp_;
 };
 
 }

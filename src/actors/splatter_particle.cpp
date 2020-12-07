@@ -1,24 +1,20 @@
 //
-// Created by Danny on 11/30/2020.
+// Created by Danny on 12/7/2020.
 //
 
+#include "actors/splatter_particle.h"
 #include "world.h"
-#include "actors/enemy.h"
 
 namespace final_project {
 
-Enemy::Enemy(std::string sprite_sheet_path, int max_frames, int frame_skip,
-             vec2 position, vec2 velocity, Rect collision, Rect hit_box,
-             double max_health, double health, float speed, glm::vec4 modulate)
-    : sprite_sheet_path_(sprite_sheet_path), max_frames_(max_frames),
-      frame_skip_(frame_skip), frame_index_(0), x_scale_(1),
-      Actor(position, velocity, collision, hit_box, max_health, health, speed,
-            {false, true, false, false}, ActorType::kEnemy),
-      modulate_(modulate) {
+SplatterParticle::SplatterParticle(vec2 position, glm::vec4 color) :
+    Actor(position, vec2(0), Rect(0,0,0,0), Rect(0,0,0,0), 0, 0, 0,
+          {false, false, false, false}, ActorType::kNeutral), color_(color){
+
 }
 
-void Enemy::Setup(World &world) {
-  int index = world.LoadTexture(sprite_sheet_path_);
+void SplatterParticle::Setup(World &world) {
+  int index = world.LoadTexture(kSpriteSheetPath);
   material_ = ci::gl::GlslProg::create(
       ci::gl::GlslProg::Format()
           .vertex(CI_GLSL(
@@ -53,29 +49,21 @@ void Enemy::Setup(World &world) {
   );
   rect_ = ci::gl::Batch::create(ci::geom::Plane(), material_);
   material_->uniform("uTex0", index);
-  material_->uniform("frame", 0);
-  material_->uniform("max_frames", max_frames_);
-  material_->uniform( "uColor", modulate_);
+  material_->uniform("frame", rand() % 3);
+  material_->uniform("max_frames", 3);
+  material_->uniform( "uColor", color_);
 }
 
-void Enemy::Draw() const {
+void SplatterParticle::Draw() const {
   ci::gl::ScopedModelMatrix scpMtx;
   ci::gl::translate(2*(position_.x - ci::app::getWindowSize().x / 2)
                         /ci::app::getWindowSize().x,
-                    (position_.y - ci::app::getWindowSize().y / 2)
-                        /ci::app::getWindowSize().y,
+                    0,
                     2*(position_.y - ci::app::getWindowSize().y / 2)
                         /ci::app::getWindowSize().y);
 
-  int cur_frame = (int)std::floor((double)frame_index_ / frame_skip_);
-  material_->uniform("frame", cur_frame);
-
-  ci::gl::scale((float)x_scale_ * 0.0625f,1,-0.0625f);
+  ci::gl::scale(0.0625f,1,-0.0625f);
   rect_->draw();
-  //ci::gl::setMatricesWindow(cinder::app::getWindowSize());
-  //ci::gl::color(1,0,0,1);
-  //ci::gl::drawLine(glm::vec2(hit_box_.x1_ + position_.x,hit_box_.y1_ + position_.y),
-  //                 glm::vec2(hit_box_.x2_ + position_.x,hit_box_.y2_ + position_.y));
 }
 
 }
