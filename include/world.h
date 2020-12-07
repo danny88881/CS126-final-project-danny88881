@@ -64,6 +64,7 @@ class World {
   Player* GetPlayer() const;
 
   int GetPoints() const;
+
   void AddPoint();
 
   static constexpr vec2 kWindowSize = vec2(512, 512);
@@ -95,8 +96,9 @@ class World {
       = "sprites/environment/Floor.png";
   ci::gl::BatchRef floor_rect_;
   ci::gl::GlslProgRef floor_material_;
-  time_t last_spawn_time_;
-  time_t spawn_interval_;
+  double last_spawn_time_;
+  double spawn_interval_;
+  const double kMinSpawnInterval = (time_t)0.5;
   const int kPlatformSize = 160;
   const int kSpawnAreaSize = 100;
   int points_;

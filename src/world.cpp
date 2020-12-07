@@ -6,14 +6,15 @@
 
 #include "actors/mouse.h"
 #include "actors/player.h"
-#include "actors/slime.h"
+#include "actors/spawn_position.h"
 
 namespace final_project {
 
 World::World() : time_scale_(1), texture_map_(), ui_(), last_spawn_time_(0),
-  spawn_interval_(1), points_(0) {}
+  spawn_interval_(1.5), points_(0) {}
 
 void World::StartGame() {
+  spawn_interval_ = 1.5;
   points_ = 0;
   for (Actor* actor : removal_queue_) {
     RemoveActor(actor);
@@ -131,12 +132,13 @@ void World::Draw() {
 }
 
 void World::Update(const InputController &controller) {
-  if (time(NULL) - last_spawn_time_ > spawn_interval_) {
-    last_spawn_time_ = time(NULL);
+  spawn_interval_ = kMinSpawnInterval + (10/(points_ + 10));
+  if ((double)time(NULL) - last_spawn_time_ > spawn_interval_) {
+    last_spawn_time_ = (double)time(NULL);
     float rand_ang = (float)M_PI * (float)(rand() % 360) / 180.0f;
     vec2 pos = vec2(cos(rand_ang), sin(rand_ang))
                * vec2((float)(rand() % kSpawnAreaSize)) + kWindowSize/vec2(2);
-    auto enemy = new Slime(pos);
+    auto enemy = new SpawnPosition(pos);
     AddActor(enemy);
   }
   for (Actor* actor : removal_queue_) {
@@ -224,7 +226,9 @@ int World::GetPoints() const {
 }
 
 void World::AddPoint() {
-  ++points_;
+  if (player_ != nullptr) {
+    ++points_;
+  }
 }
 
 }

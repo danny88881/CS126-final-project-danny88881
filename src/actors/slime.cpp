@@ -4,6 +4,7 @@
 
 #include "world.h"
 #include "actors/slime.h"
+#include "actors/splatter_particle.h"
 
 namespace final_project {
 
@@ -11,7 +12,7 @@ Slime::Slime(vec2 position) : Enemy("sprites/enemies/slime.png", 2, 16, position
             vec2(0), Rect(-10,-10,10,10), Rect(-15,-15,15,15), 3, 3, 4,
             glm::vec4((rand() % 256) / 256.0f,
                     (rand() % 256) / 256.0f,
-                    (rand() % 256) / 256.0f, 1)) {
+                    (rand() % 256) / 256.0f, 1)), last_hp_(3) {
 }
 
 void Slime::Update(float time_scale, World &world,
@@ -39,6 +40,15 @@ void Slime::Update(float time_scale, World &world,
   if (glm::length(knockback_velocity_) >= 0.4) {
     velocity_ = knockback_velocity_;
     knockback_velocity_ *= 0.8;
+  }
+  if (last_hp_ != health_) {
+    last_hp_ = health_;
+    /* size_t particle_count = rand() % 3 + 2;
+    for (size_t index = 0; index < particle_count; ++index) {
+      vec2 offset = vec2(rand() % 21 - 10, rand() % 21 - 10);
+      auto particle = new SplatterParticle(position_ + offset, modulate_);
+      world.AddActor(particle);
+    } don't spawn particle effect */
   }
 
   bool collision_occurred = false;
@@ -80,6 +90,12 @@ void Slime::Update(float time_scale, World &world,
   if (health_ <= 0) {
     world.QueueFree(this);
     world.AddPoint();
+    /* size_t particle_count = rand() % 3 + 2;
+    for (size_t index = 0; index < particle_count; ++index) {
+      vec2 offset = vec2(rand() % 21 - 10, rand() % 21 - 10);
+      auto particle = new SplatterParticle(position_ + offset, modulate_);
+      world.AddActor(particle);
+    } don't spawn particle effect */
     return;
   }
 }
