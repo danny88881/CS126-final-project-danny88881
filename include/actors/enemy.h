@@ -13,7 +13,7 @@ class Enemy : public Actor {
  public:
   Enemy(std::string sprite_sheet_path, int max_frames, int frame_skip,
         vec2 position, vec2 velocity, Rect collision, Rect hit_box,
-        double max_health, double health, float speed);
+        double max_health, double health, float speed, glm::vec4 modulate);
 
   virtual void Setup(World &world) override;
   virtual void Draw() const override;
@@ -26,6 +26,7 @@ class Enemy : public Actor {
   int x_scale_;
   ci::gl::BatchRef rect_;
   ci::gl::GlslProgRef material_;
+  glm::vec4 modulate_;
 };
 
 }

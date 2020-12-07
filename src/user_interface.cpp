@@ -12,7 +12,7 @@ const std::string UserInterface::kBoxSpritePath = "sprites/ui/Keybox.png";
 const std::string UserInterface::kNoAttackSpritePath = "sprites/ui/Cross.png";
 
 UserInterface::UserInterface() : player_attacks_(), player_attack_count_(),
-      box_index_(0), cross_index_(0), points_(0) {
+      box_index_(0), cross_index_(0), points_(0), player_dead_(false) {
 }
 
 void UserInterface::Setup(World &world) {
@@ -52,46 +52,56 @@ void UserInterface::Setup(World &world) {
 void UserInterface::Draw() {
   ci::gl::ScopedModelMatrix scpMtx;
   ci::gl::scale(0.0625f,1,-0.0625f);
-  if (player_attacks_.size() <= 0) {
-    return;
+  if (player_attacks_.size() > 0) {
+    ci::gl::translate(0, 0, -0.75f * 16);
+    DrawKeyBox(player_attacks_[AttackDirection::kUpAttack]);
+    ci::gl::translate(0, 0, -0.125f * 16);
+    DrawKeyBox(player_attacks_[AttackDirection::kDownAttack]);
+    ci::gl::translate(-0.125f * 16, 0, 0);
+    DrawKeyBox(player_attacks_[AttackDirection::kLeftAttack]);
+    ci::gl::translate(0.25f * 16, 0, 0);
+    DrawKeyBox(player_attacks_[AttackDirection::kRightAttack]);
   }
 
-  ci::gl::translate(0, 0,-0.75f * 16);
-  DrawKeyBox(player_attacks_[AttackDirection::kUpAttack]);
-  ci::gl::translate(0, 0,-0.125f * 16);
-  DrawKeyBox(player_attacks_[AttackDirection::kDownAttack]);
-  ci::gl::translate(-0.125f * 16, 0,0);
-  DrawKeyBox(player_attacks_[AttackDirection::kLeftAttack]);
-  ci::gl::translate(0.25f * 16, 0,0);
-  DrawKeyBox(player_attacks_[AttackDirection::kRightAttack]);
-
   ci::gl::setMatricesWindow(cinder::app::getWindowSize());
-  ci::gl::drawString(std::to_string(points_),
-                     vec2(10,10), glm::vec4(1,1,1,1), font_);
-  glm::vec4 color = glm::vec4(1,1,1,(float)(0.4 + 0.6 *
-      ((player_attack_count_[AttackDirection::kUpAttack]
-                       > 0) ? 1 : 0)));
-  ci::gl::drawString(std::to_string(
-                         player_attack_count_[AttackDirection::kUpAttack]),
-                     vec2(245,415), color, font_);
-  color.a = (float)(0.4 + 0.6 *
-      ((player_attack_count_[AttackDirection::kDownAttack]
-                > 0) ? 1 : 0));
-  ci::gl::drawString(std::to_string(
-                         player_attack_count_[AttackDirection::kDownAttack]),
-                     vec2(245,496), color, font_);
-  color.a = (float)(0.4 + 0.6 *
-      ((player_attack_count_[AttackDirection::kLeftAttack]
-                > 0) ? 1 : 0));
-  ci::gl::drawString(std::to_string(
-                         player_attack_count_[AttackDirection::kLeftAttack]),
-                     vec2(190,475), color, font_);
-  color.a = (float)(0.4 + 0.6 *
-      ((player_attack_count_[AttackDirection::kRightAttack]
-                > 0) ? 1 : 0));
-  ci::gl::drawString(std::to_string(
-                         player_attack_count_[AttackDirection::kRightAttack]),
-                     vec2(300,475), color, font_);
+  if (player_dead_) {
+    ci::gl::drawString("GAME OVER", vec2(196, 100),
+                       glm::vec4(1, 1, 1, 1), font_);
+    ci::gl::drawString(std::to_string(points_), vec2(196, 130),
+                       glm::vec4(1, 1, 1, 1), font_);
+  } else {
+    ci::gl::drawString(std::to_string(points_), vec2(10, 10),
+                       glm::vec4(1, 1, 1, 1), font_);
+    glm::vec4 color = glm::vec4(
+        1, 1, 1,
+        (float)(0.4 +
+                0.6 * ((player_attack_count_[AttackDirection::kUpAttack] > 0)
+                           ? 1 : 0)));
+    ci::gl::drawString(
+        std::to_string(player_attack_count_[AttackDirection::kUpAttack]),
+        vec2(245, 415), color, font_);
+    color.a =
+        (float)(0.4 +
+                0.6 * ((player_attack_count_[AttackDirection::kDownAttack] > 0)
+                           ? 1 : 0));
+    ci::gl::drawString(
+        std::to_string(player_attack_count_[AttackDirection::kDownAttack]),
+        vec2(245, 496), color, font_);
+    color.a =
+        (float)(0.4 +
+                0.6 * ((player_attack_count_[AttackDirection::kLeftAttack] > 0)
+                           ? 1 : 0));
+    ci::gl::drawString(
+        std::to_string(player_attack_count_[AttackDirection::kLeftAttack]),
+        vec2(190, 475), color, font_);
+    color.a =
+        (float)(0.4 +
+                0.6 * ((player_attack_count_[AttackDirection::kRightAttack] > 0)
+                           ? 1 : 0));
+    ci::gl::drawString(
+        std::to_string(player_attack_count_[AttackDirection::kRightAttack]),
+        vec2(300, 475), color, font_);
+  }
 }
 
 void UserInterface::DrawKeyBox(Attack *attack) {
@@ -115,6 +125,8 @@ void UserInterface::Update(World &world) {
   if (world.GetPlayer() != nullptr) {
     player_attacks_ = world.GetPlayer()->GetAttacks();
     player_attack_count_ = world.GetPlayer()->GetAttackCount();
+  } else {
+    player_dead_ = true;
   }
   points_ = world.GetPoints();
 }

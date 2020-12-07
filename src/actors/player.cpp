@@ -12,7 +12,7 @@ namespace final_project {
 using glm::vec2;
 
 Player::Player() : Actor(vec2(0,0), vec2(0,0), Rect(-10,-10,10,10),
-                         Rect(-20,-20,20,20), 3, 3, 3,
+                         Rect(-20,-20,20,20), 20, 20, 3,
             {true, false, false, false}, ActorType::kPlayer),
       frame_index_(0), x_scale_(1),
       attack_direction_(AttackDirection::kNone),
@@ -190,6 +190,11 @@ void Player::Update(float time_scale, World &world,
 
   if (collision_occurred) {
     position_ = last_position;
+  }
+  
+  if (health_ <= 0) {
+    world.QueueFree(this);
+    return;
   }
 }
 

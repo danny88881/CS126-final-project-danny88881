@@ -12,7 +12,7 @@ namespace final_project {
 World::World() : time_scale_(1), texture_map_(), ui_(), last_spawn_time_(0),
   spawn_interval_(1), points_(0) {
   srand((size_t)time(NULL));// http://www.cplusplus.com/reference/cstdlib/srand/
-  auto player = new Player(kWindowSize / vec2(2) + vec2(0, 100));
+  auto player = new Player(kWindowSize / vec2(2));
   AddActor(player);
   player_ = player;
   auto border1 = new Actor(vec2(-50, (int)kWindowSize.y / 2),
@@ -181,6 +181,9 @@ void World::QueueFree(Actor* actor) {
 }
 
 void World::RemoveActor(Actor* actor) {
+  if (actor == player_) {
+    player_ = nullptr;
+  }
   for (size_t index = 0; index < actors_.size(); ++index) {
     if (actors_[index] == actor) {
       delete actor;

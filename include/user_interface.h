@@ -29,6 +29,7 @@ class UserInterface {
   vector<Attack*> player_attacks_;
   vector<int> player_attack_count_;
   int points_;
+  bool player_dead_;
 
   void DrawKeyBox(Attack* attack);
 };

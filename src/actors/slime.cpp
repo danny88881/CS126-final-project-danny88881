@@ -8,7 +8,10 @@
 namespace final_project {
 
 Slime::Slime(vec2 position) : Enemy("sprites/enemies/slime.png", 2, 16, position,
-            vec2(0), Rect(-10,-10,10,10), Rect(-15,-15,15,15), 3, 3, 4) {
+            vec2(0), Rect(-10,-10,10,10), Rect(-15,-15,15,15), 3, 3, 4,
+            glm::vec4((rand() % 256) / 256.0f,
+                    (rand() % 256) / 256.0f,
+                    (rand() % 256) / 256.0f, 1)) {
 }
 
 void Slime::Update(float time_scale, World &world,
@@ -37,7 +40,6 @@ void Slime::Update(float time_scale, World &world,
     velocity_ = knockback_velocity_;
     knockback_velocity_ *= 0.8;
   }
-  position_ += velocity_ * time_scale;
 
   bool collision_occurred = false;
   for (const Actor *actor : world.GetActors()) {
@@ -47,13 +49,28 @@ void Slime::Update(float time_scale, World &world,
     }
   }
 
+  position_ += velocity_ * time_scale;
+
+  // double collision check prevents slimes from sticking
+  if (!collision_occurred) {
+    collision_occurred = false;
+    for (const Actor *actor : world.GetActors()) {
+      if (actor != this && IsColliding(*actor)) {
+        collision_occurred = true;
+        break;
+      }
+    }
+  } else {
+    collision_occurred = false;
+  }
+
   if (collision_occurred) {
     position_ = last_position;
   }
 
   for (Actor *actor : world.GetActors()) {
     if (actor != this && IsCollidingWithHitBox(*actor)) {
-      actor->Damage(kDamage);
+      //actor->Damage(kDamage); slimes do no damage
       vec2 knockback = glm::normalize(actor->GetPosition() - position_)
                  * vec2((float)kKnockbackForce);
       actor->SetKnockback(knockback);
@@ -62,6 +79,7 @@ void Slime::Update(float time_scale, World &world,
 
   if (health_ <= 0) {
     world.QueueFree(this);
+    world.AddPoint();
     return;
   }
 }
