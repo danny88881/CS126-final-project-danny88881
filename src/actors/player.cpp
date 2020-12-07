@@ -4,37 +4,24 @@
 
 #include "cinder/gl/gl.h"
 #include "world.h"
+#include "actors/pickup.h"
 #include "actors/player.h"
 
 namespace final_project {
 
 using glm::vec2;
 
-Player::Player() : Actor(vec2(0,0), vec2(0,0), Rect(-20,-20,20,20),
-                         Rect(-20,-20,20,20), 3, 3, 2,
+Player::Player() : Actor(vec2(0,0), vec2(0,0), Rect(-10,-10,10,10),
+                         Rect(-20,-20,20,20), 3, 3, 3,
             {true, false, false, false}, ActorType::kPlayer),
       frame_index_(0), x_scale_(1),
       attack_direction_(AttackDirection::kNone),
       attack_frame_length_(12), attack_frame_(12),
       can_attack_(true), attack_frame_delay_(12) {
   attacks_ = {nullptr, nullptr, nullptr, nullptr};
+  attack_count_ = {1,0,0,0};
   auto attack = new Attack();
   attacks_[AttackDirection::kUpAttack] = attack;
-  auto attack2 = new Attack(Rect(-16, -64, 16, 48), 0, ActorType::kPlayer, 1.5f,
-                            4,
-                            "sprites/weapon/Spear.png", "sprites/ui/Spear.png",
-                            3, 3, 3, 64, vec2(32, 64), {vec2(0, 3)}, true);
-  attacks_[AttackDirection::kRightAttack] = attack2;
-  auto attack3 = new Attack(Rect(-64, -64, 64, 64), 0, ActorType::kPlayer, 0.6f,
-                            7,
-                            "sprites/weapon/Magic.png", "sprites/ui/Magic.png",
-                            6, 3, 6, 84, vec2(64, 64), {vec2(3,5)}, false);
-  attacks_[AttackDirection::kDownAttack] = attack3;
-  auto attack4 = new Attack(Rect(-16, -16, 16, 16), 12, ActorType::kPlayer, 2.0f,
-                            2,
-                            "sprites/weapon/Arrow.png", "sprites/ui/Arrow.png",
-                            4, 2, 24, 24, vec2(16, 16), {vec2(0,100)}, true);
-  attacks_[AttackDirection::kLeftAttack] = attack4;
 }
 
 Player::Player(vec2 position) : Player() {
@@ -242,11 +229,29 @@ void Player::AttackAtDirection(AttackDirection attack_direction, World &world) {
                                 position_ + dir
     * vec2((float)attacks_[attack_direction]->GetPositionOffset()));
     world.AddActor(attack);
+    if (--attack_count_[attack_direction] <= 0) {
+      attacks_[attack_direction] = nullptr;
+    }
+    int size = 0;
+    for (int count : attack_count_) {
+      size += count;
+    }
+    if (size == 0) {
+      AttackDirection dir = (AttackDirection)(rand() % 4);
+      Attack* new_attack =
+          world.kPlayerAttacks[rand() % world.kPlayerAttacks.size()];
+      attacks_[dir] = new_attack;
+      attack_count_[dir] = rand() % (kMaxAttack - kMinAttack) + kMinAttack;
+    }
   }
 }
 
 vector<Attack*> Player::GetAttacks() const {
   return vector<Attack*>(attacks_);
+}
+
+vector<int> Player::GetAttackCount() const {
+  return vector<int>(attack_count_);
 }
 
 }  // namespace final_project

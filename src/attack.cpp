@@ -9,9 +9,9 @@
 namespace final_project {
 
 Attack::Attack() : Actor(vec2(0,0), vec2(0,0), Rect(0,0,0,0),
-                          Rect(-32,-32,32,32), -1, -1, 0,
+                          Rect(-48,-48,48,48), -1, -1, 0,
                           {false, false, false, false}, ActorType::kPlayer),
-      damage_(1), knockback_(5) ,sprite_sheet_path_("sprites/weapon/Slash.png"),
+      damage_(1), knockback_(8) ,sprite_sheet_path_("sprites/weapon/Slash.png"),
       dimension_(32,32), max_frames_(3), frame_skip_(2), frame_life_(3),
       frame_index_(0), rotation_(0), hit_actors_(), sprite_icon_index_(0),
       position_offset_(24), active_intervals_({vec2(0,3)}),
@@ -111,7 +111,7 @@ void Attack::Update(float time_scale, World &world,
   } else {
     ++frame_index_;
   }
-  vec2 direction = vec2(sin(rotation_), cos(rotation_));
+  vec2 direction = vec2(sin(rotation_), -cos(rotation_));
   velocity_ = direction * vec2(speed_);
 
   position_ += velocity_ * time_scale;
@@ -132,14 +132,14 @@ void Attack::Update(float time_scale, World &world,
       }
       if (actor != this && IsCollidingWithHitBox(*actor)) {
         actor->Damage(damage_);
+        hit_actors_.push_back(actor);
         if (world.GetPlayer() == nullptr) {
-          return;
+          continue;
         }
         vec2 knockback = glm::normalize(actor->GetPosition()
                                         - world.GetPlayer()->GetPosition())
             * vec2((float)knockback_);
         actor->SetKnockback(knockback);
-        hit_actors_.push_back(actor);
       }
     }
   } else {
@@ -163,6 +163,7 @@ void Attack::Draw() const {
     ci::gl::rotate((float)rotation_, glm::vec3(0, 1, 0));
   }
   rect_->draw();
+  // uncomment to see collision box
   /*ci::gl::setMatricesWindow(cinder::app::getWindowSize());
   ci::gl::color(1,0,0,1);
   ci::gl::drawLine(glm::vec2(hit_box_.x1_ + position_.x,

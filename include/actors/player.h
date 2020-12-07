@@ -29,6 +29,8 @@ class Player : public Actor {
   virtual void Damage(double damage) override;
 
   vector<Attack*> GetAttacks() const;
+  vector<int> GetAttackCount() const;
+
  private:
   const std::string kSpriteSheetPath
       = "sprites/player/CharacterSpriteSheet.png";
@@ -40,6 +42,8 @@ class Player : public Actor {
   ci::gl::GlslProgRef scythe_material_;
   const int kMaxFrames = 4;
   const int kFrameSkip = 8;
+  const int kMaxAttack = 3;
+  const int kMinAttack = 1;
   int frame_index_;
   int x_scale_;
 
@@ -50,6 +54,7 @@ class Player : public Actor {
   int attack_frame_delay_;
 
   vector<Attack*> attacks_;
+  vector<int> attack_count_;
 
   void AttackAtDirection(AttackDirection attack_direction, World &world);
 };

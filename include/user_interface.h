@@ -12,21 +12,23 @@ namespace final_project {
 
 class UserInterface {
  public:
-  UserInterface(Player* player);
+  UserInterface();
 
   virtual void Setup(World &world);
-  virtual void Update();
+  virtual void Update(World &world);
   virtual void Draw();
 
  private:
-  Player* player_;
   static const std::string kBoxSpritePath;
   static const std::string kNoAttackSpritePath;
   int box_index_;
   int cross_index_;
+  cinder::Font font_;
   ci::gl::BatchRef box_rect_;
   ci::gl::GlslProgRef box_material_;
   vector<Attack*> player_attacks_;
+  vector<int> player_attack_count_;
+  int points_;
 
   void DrawKeyBox(Attack* attack);
 };

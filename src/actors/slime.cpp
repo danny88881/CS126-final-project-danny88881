@@ -19,9 +19,17 @@ void Slime::Update(float time_scale, World &world,
   }
   vec2 last_position = position_;
 
-  if (glm::length(velocity_) < 0.02) {
-    velocity_ = glm::normalize(world.GetPlayer()->GetPosition() - position_)
-                * speed_;
+  if (glm::length(velocity_) < 0.008) {
+    if (world.GetPlayer() != nullptr) {
+      velocity_ =
+          glm::normalize(world.GetPlayer()->GetPosition() - position_) * speed_;
+    } else {
+      int rand1 = rand() % 101 - 50;
+      int rand2 = rand() % 101 - 50;
+      if (rand1 != 0 && rand2 != 0) {
+        velocity_ = glm::normalize(vec2(rand1, rand2)) * speed_;
+      }
+    }
   } else {
     velocity_ *= 0.9;
   }
