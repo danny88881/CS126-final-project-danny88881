@@ -50,12 +50,12 @@ get_filename_component(APP_PATH "${CMAKE_CURRENT_SOURCE_DIR}/" ABSOLUTE)
 include("${CINDER_PATH}/proj/cmake/modules/cinderMakeApp.cmake")
 
 list(APPEND CORE_SOURCE_FILES src/actor.cpp src/world.cpp src/input_controller.cpp src/actors/player.cpp
-        src/attack.cpp src/user_interface.cpp src/actors/enemy.cpp src/actors/slime.cpp src/actors/pickup.cpp)
+        src/attack.cpp src/user_interface.cpp src/actors/enemy.cpp src/actors/slime.cpp)
 
 list(APPEND SOURCE_FILES    ${CORE_SOURCE_FILES}
         visuals/cinder_app.cpp)
 
-list(APPEND TEST_FILES tests/actor_test.cpp)
+list(APPEND TEST_FILES tests/actor_test.cpp tests/attack_test.cpp)
 
 ci_make_app(
         APP_NAME        final-project-run
