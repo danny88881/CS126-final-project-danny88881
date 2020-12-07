@@ -11,14 +11,15 @@ in a random direction after using up the current attack.
 
 ### Dependencies
 
-- Clang or MSVC 2015+
+- MSVC 2015+
 - CMake
 - Cinder
 - Catch2 (for testing)
 
 ### Start
 
-Project must be in cinder directory within a "projects" folder
+- Install Cinder and place project within the cinder directory in a "projects" folder
+- Enter the Visual Studio Command Line Development Environment
 
 ```
 > cd path/to/final_project
